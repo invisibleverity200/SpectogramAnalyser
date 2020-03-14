@@ -8,7 +8,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import java.util.ArrayList;
 
-public class BarChart {
+public class BarChart implements Charts {
     ArrayList<XYSeries> dataSet = new ArrayList<>();
 
     public ChartPanel init(XYSeries[] dataSet) {
@@ -18,13 +18,17 @@ public class BarChart {
 
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
         for (int i = 0; i < dataSet.length; i++) {
-            xySeriesCollection.addSeries(dataSet[i]);
+            if (dataSet[i] != null) {
+                xySeriesCollection.addSeries(dataSet[i]);
+            }
+        }
+        if (xySeriesCollection.getSeriesCount() != 0) {
+            JFreeChart chart = ChartFactory.createScatterPlot("SpectrumAnalyser", "Frequency", "Level", xySeriesCollection);
+            ChartPanel panel = new ChartPanel(chart);
+            return panel;
         }
 
-        JFreeChart chart = ChartFactory.createScatterPlot("SpectrumAnalyser", "Frequency", "Level", xySeriesCollection);
-        ChartPanel panel = new ChartPanel(chart);
-
-        return panel;
+        return null;
     }
 
     public void update(int[][] newData, int frequencySteps, int startFrequency) {

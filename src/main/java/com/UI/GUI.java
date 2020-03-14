@@ -1,11 +1,18 @@
 package com.UI;
 
+import com.Data.AudChannel;
 import com.Data.BarChartDataSetGenerator;
 import com.Data.Config;
+import com.Network.AudioClient;
+import com.Network.Updater;
+import org.jfree.chart.ChartPanel;
+import org.jfree.data.xy.XYSeries;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class GUI extends JFrame {
     public GUI() {
@@ -35,15 +42,18 @@ public class GUI extends JFrame {
 
         Config config = new Config();
         BarChart barChart = new BarChart();
+        final Thread[] clientThread = new Thread[1];
         BarChartDataSetGenerator dataSetGenerator = new BarChartDataSetGenerator();
         config.readConfigFile();
 
         JMenuBar menuBar = new JMenuBar();
         JMenu settingsMenu = new JMenu("Settings");
         JMenu channelMenu = new JMenu("Channel Selection");
+        JMenu operations = new JMenu("operations");
 
         menuBar.add(settingsMenu);
         menuBar.add(channelMenu);
+        menuBar.add(operations);
 
         JMenuItem menuItem = new JMenuItem("Settings", new ImageIcon("images/settings.png"));
         menuItem.addActionListener((ActionEvent e) -> {
@@ -75,22 +85,30 @@ public class GUI extends JFrame {
             GridBagConstraints gbc = new GridBagConstraints();
             panel.setLayout(new GridBagLayout());
 
-            gbc.fill = GridBagConstraints.BASELINE;
-            gbc.gridx = 10;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.gridx = 0;
             gbc.gridy = 0;
             panel.add(startEndFrequencyField, gbc);
-            gbc.gridx = 1;
-            gbc.gridy = 0;
+            gbc.gridx = 0;
+            gbc.gridy = 1;
             panel.add(VoltageStepWidthField, gbc);
-            gbc.gridheight = 0;
+            gbc.gridwidth = 3;
+            gbc.gridx = 0;
+            gbc.gridy = 5;
             panel.add(applyButton, gbc);
+            gbc.gridwidth = 3;
+            gbc.gridx = 0;
+            gbc.gridy = 4;
             panel.add(saveButton, gbc);
-            panel.add(ipAndPortField,gbc);
+            gbc.gridwidth = 3;
+            gbc.gridx = 0;
+            gbc.gridy = 3;
+            panel.add(ipAndPortField, gbc);
 
             settingDialog.setContentPane(panel);
             settingDialog.setTitle("Settings");
             settingDialog.setVisible(true);
-            settingDialog.setSize(400, 400);
+            settingDialog.setSize(150, 180);
         });
         menuItem.setMnemonic(KeyEvent.VK_B);
 
@@ -104,15 +122,56 @@ public class GUI extends JFrame {
             i++;
         }
 
+        JMenuItem stopContinueOption = new JMenuItem("frezze Connection");
+        stopContinueOption.addActionListener((ActionEvent e) -> {
+            if (stopContinueOption.getText().equals("frezz Connection")) {
+                stopContinueOption.setText("continue Connection");
+            } else {
+                stopContinueOption.setText("frezz Connection");
+            }
+        });
+
+        JMenuItem cancel = new JMenuItem("cancel Connection");
+        cancel.addActionListener((ActionEvent e) -> {
+            getContentPane().remove(getContentPane());
+            repaint();
+            revalidate();
+            pack();
+        });
+
+        JMenuItem reload = new JMenuItem("reload");
+        reload.addActionListener((ActionEvent e) -> {
+            getSelectedChannels(channelItems, config);
+
+        });
+
+        operations.add(reload);
+        operations.add(stopContinueOption);
+        operations.add(cancel);
+
         JButton plotButton = new JButton("Connect");
 
         plotButton.addActionListener((ActionEvent e) -> {
-            boolean[] selectedItems = new boolean[config.channelNames.length];
-            for (int y = 0; y < config.channelNames.length - 1; y++) {
-                selectedItems[y] = channelItems[y].isSelected();
-            }
+            AudChannel[] channels = new AudChannel[16];
             /*dataSetGenerator.createDataSet(null,null,config.startFrequency,config.endFrequency)
             barChart.init();*/
+            int[] selectedChannels = getSelectedChannels(channelItems, config);
+            XYSeries[] s = new XYSeries[1];
+            XYSeries series = new XYSeries("test");
+            series.add(1, 2);
+            s[0] = series; //
+            ChartPanel chartPanel = barChart.init(s);
+            if (chartPanel != null) {
+                setContentPane(chartPanel); //TODO bug
+                revalidate();
+                repaint();
+                pack();
+            } else {
+                JOptionPane.showMessageDialog(null, "No valid data source", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+            }
+
+            clientThread[0] = new Updater(barChart, new AudioClient()); //TODO make this correct
+            clientThread[0].start();
         });
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -128,5 +187,19 @@ public class GUI extends JFrame {
         setSize(400, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+    }
+
+    private int[] getSelectedChannels(JCheckBoxMenuItem[] channelItems, Config config) {
+        ArrayList<Integer> listOfSelectedChannels = new ArrayList<>();
+        for (int y = 0; y < config.channelNames.length - 1; y++) {
+            if (channelItems[y].isSelected()) {
+                listOfSelectedChannels.add(y);
+            }
+        }
+        int[] selectedChannels = new int[listOfSelectedChannels.size()];
+        for (int i = 0; i < listOfSelectedChannels.size(); i++) {
+            selectedChannels[i] = listOfSelectedChannels.get(i);
+        }
+        return selectedChannels;
     }
 }
