@@ -141,8 +141,16 @@ public class GUI extends JFrame {
 
         JMenuItem reload = new JMenuItem("reload");
         reload.addActionListener((ActionEvent e) -> {
-            getSelectedChannels(channelItems, config);
+            int[] selectedChannels = getSelectedChannels(channelItems, config);
+            XYSeries[] emptyInitArray = new XYSeries[selectedChannels.length];
+            fillArray(emptyInitArray);
 
+            setContentPane(barChart.init(emptyInitArray)); //TODO bug //FIXME its not working after a second init you can update anymore
+
+            revalidate();
+            repaint();
+            pack();
+            //
         });
 
         operations.add(reload);
@@ -170,7 +178,7 @@ public class GUI extends JFrame {
                 JOptionPane.showMessageDialog(null, "No valid data source", "An Error occurred", JOptionPane.ERROR_MESSAGE);
             }
 
-            clientThread[0] = new Updater(barChart, new AudioClient()); //TODO make this correct
+            clientThread[0] = new Updater(barChart, new AudioClient(), config); //TODO make this correct
             clientThread[0].start();
         });
 
@@ -201,5 +209,11 @@ public class GUI extends JFrame {
             selectedChannels[i] = listOfSelectedChannels.get(i);
         }
         return selectedChannels;
+    }
+    private void fillArray(XYSeries[] array){
+        for(int i = 0; i < array.length; i++){
+            array[i] = new XYSeries(String.valueOf(i));
+            array[i].add(0,0);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.UI;
 
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.xy.XYSeries;
@@ -9,11 +10,17 @@ import org.jfree.data.xy.XYSeriesCollection;
 import java.util.ArrayList;
 
 public class BarChart implements Charts {
+    JFreeChart chart;
     ArrayList<XYSeries> dataSet = new ArrayList<>();
+    ChartPanel panel;
 
     public ChartPanel init(XYSeries[] dataSet) {
         for (int i = 0; i < dataSet.length; i++) {
-            this.dataSet.add(dataSet[i]);
+            if ( i < this.dataSet.size()) {
+                this.dataSet.set(i, dataSet[i]);
+            } else {
+                this.dataSet.add(dataSet[i]);
+            }
         }
 
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
@@ -23,7 +30,7 @@ public class BarChart implements Charts {
             }
         }
         if (xySeriesCollection.getSeriesCount() != 0) {
-            JFreeChart chart = ChartFactory.createScatterPlot("SpectrumAnalyser", "Frequency", "Level", xySeriesCollection);
+            chart = ChartFactory.createScatterPlot("SpectrumAnalyser", "Frequency", "Level", xySeriesCollection);
             ChartPanel panel = new ChartPanel(chart);
             return panel;
         }
@@ -40,6 +47,20 @@ public class BarChart implements Charts {
                 }
             }
         }
+
+   /*     XYSeries[] xySeriesArray = new XYSeries[newData.length];
+        for (int i = 0; i < newData.length; i++) {
+            XYSeries xySeries = new XYSeries(String.valueOf(i)); //FIXME real name
+            for (int y = 0; y < newData[i].length; y++) {
+                xySeries.add(startFrequency + y * frequencySteps, newData[i][y]);
+            }
+            xySeriesArray[i] = xySeries;
+        }
+        XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
+        for (int i = 0; i < xySeriesArray.length; i++) {
+            xySeriesCollection.addSeries(xySeriesArray[i]);
+        }
+        chart = ChartFactory.createScatterPlot("SpectrumAnalyser", "Frequency", "Level", xySeriesCollection);*/
     }
 
 }
