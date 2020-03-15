@@ -45,7 +45,6 @@ public class GUI extends JFrame {
         final AudioClient[] client = {null};
         final Thread[] clientThread = new Thread[1];
         BarChartDataSetGenerator dataSetGenerator = new BarChartDataSetGenerator();
-        config.readConfigFile();
 
         JMenuBar menuBar = new JMenuBar();
         JMenu settingsMenu = new JMenu("Settings");
@@ -115,7 +114,7 @@ public class GUI extends JFrame {
 
         settingsMenu.add(menuItem);
 
-        JCheckBoxMenuItem[] channelItems = new JCheckBoxMenuItem[config.channelNames.length];
+        JCheckBoxMenuItem[] channelItems = new JCheckBoxMenuItem[config.channelNames.size()];
         int i = 0;
         for (String channelName : config.channelNames) {
             channelItems[i] = new JCheckBoxMenuItem(channelName);
@@ -179,7 +178,7 @@ public class GUI extends JFrame {
             /*dataSetGenerator.createDataSet(null,null,config.startFrequency,config.endFrequency)
             barChart.init();*/
             int[] selectedChannels = getSelectedChannels(channelItems, config);
-            XYSeries[] s = new XYSeries[1];
+            XYSeries[] s = new XYSeries[selectedChannels.length];//TODO init richtig machen
             XYSeries series = new XYSeries("test");
             series.add(1, 2);
             s[0] = series; //
@@ -214,7 +213,7 @@ public class GUI extends JFrame {
 
     private int[] getSelectedChannels(JCheckBoxMenuItem[] channelItems, Config config) {
         ArrayList<Integer> listOfSelectedChannels = new ArrayList<>();
-        for (int y = 0; y < config.channelNames.length - 1; y++) {
+        for (int y = 0; y < config.channelNames.size(); y++) {
             if (channelItems[y].isSelected()) {
                 listOfSelectedChannels.add(y);
             }

@@ -2,11 +2,12 @@ package com.Data;
 
 import javax.json.*;
 import java.io.*;
+import java.util.ArrayList;
 
 public class Config {
     public int startFrequency = 1000;
     public int endFrequency = 1000;
-    public String[] channelNames = {"t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t", "t"};
+    public ArrayList<String> channelNames = new ArrayList<>();
     public double voltageStepWidth = 0.01;
     int port = 1337;
     String hostname = "192.168.0.1";
@@ -52,11 +53,12 @@ public class Config {
             this.port = config.getInt("Port");
             this.hostname = config.getString("Hostname");
             this.blockSize = config.getInt("BlockSize");
+
             JsonArray channelNames = config.getJsonArray("channelNames");
-            int i = 0;
+            System.out.println(channelNames);
             for (JsonValue channelName : channelNames) {
-                this.channelNames[i] = channelName.toString();
-                i++;
+                this.channelNames.add(channelName.toString());
+                System.out.println(channelName.toString());
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -64,15 +66,16 @@ public class Config {
     }
 
     private JsonObject createJsonObject() {
-        JsonArrayBuilder channelNames = Json.createArrayBuilder();
+       /* JsonArrayBuilder channelNames = Json.createArrayBuilder();
         for (String channelName : this.channelNames) {
             channelNames.add(channelName);
-        }
+            System.out.println(channelName);
+        }*/
         JsonObject config = Json.createObjectBuilder()
                 .add("StartFrequency", startFrequency)
                 .add("EndFrequency", endFrequency)
                 .add("VoltageStepWidth", String.valueOf(voltageStepWidth))
-                .add("channelNames", channelNames)
+                // .add("channelNames", channelNames)
                 .add("Hostname", hostname)
                 .add("Port", port)
                 .add("BlockSize", blockSize)
