@@ -21,7 +21,7 @@ public class Updater extends Thread {
 
     @Override
     public void run() {
-        int[][] i = {{2, 3}};
+        int[][] i = {{2, 3}, {2, 6},{3,9,12,12,100}};
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {

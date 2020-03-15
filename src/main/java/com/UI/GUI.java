@@ -42,6 +42,7 @@ public class GUI extends JFrame {
 
         Config config = new Config();
         BarChart barChart = new BarChart();
+        final AudioClient[] client = {null};
         final Thread[] clientThread = new Thread[1];
         BarChartDataSetGenerator dataSetGenerator = new BarChartDataSetGenerator();
         config.readConfigFile();
@@ -49,7 +50,7 @@ public class GUI extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         JMenu settingsMenu = new JMenu("Settings");
         JMenu channelMenu = new JMenu("Channel Selection");
-        JMenu operations = new JMenu("operations");
+        JMenu operations = new JMenu("Operations");
 
         menuBar.add(settingsMenu);
         menuBar.add(channelMenu);
@@ -142,10 +143,24 @@ public class GUI extends JFrame {
         JMenuItem reload = new JMenuItem("reload");
         reload.addActionListener((ActionEvent e) -> {
             int[] selectedChannels = getSelectedChannels(channelItems, config);
-            XYSeries[] emptyInitArray = new XYSeries[selectedChannels.length];
-            fillArray(emptyInitArray);
+            XYSeries[] initArray = new XYSeries[selectedChannels.length];
+            int index = 0;
+            for (AudChannel channel : client[0].channels) {
+                if (channel.channelIndex == selectedChannels[index]) {
+                    initArray[index] = channel.getXYSeries(config);
+                    index++;
+                }
+            }
 
-            setContentPane(barChart.init(emptyInitArray)); //TODO bug //FIXME its not working after a second init you can update anymore
+            ChartPanel chartPanel = barChart.init(initArray);
+            if (chartPanel != null) {
+                setContentPane(chartPanel); //TODO bug
+                revalidate();
+                repaint();
+                pack();
+            } else {
+                JOptionPane.showMessageDialog(null, "No valid data source", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+            }
 
             revalidate();
             repaint();
@@ -177,8 +192,8 @@ public class GUI extends JFrame {
             } else {
                 JOptionPane.showMessageDialog(null, "No valid data source", "An Error occurred", JOptionPane.ERROR_MESSAGE);
             }
-
-            clientThread[0] = new Updater(barChart, new AudioClient(), config); //TODO make this correct
+            client[0] = new AudioClient();
+            clientThread[0] = new Updater(barChart, client[0], config); //TODO make this correct
             clientThread[0].start();
         });
 
@@ -210,10 +225,11 @@ public class GUI extends JFrame {
         }
         return selectedChannels;
     }
-    private void fillArray(XYSeries[] array){
-        for(int i = 0; i < array.length; i++){
+
+    private void fillArray(XYSeries[] array) { //TODO hier brauche ich noch die Config um die Channel richtig zubennenen.
+        for (int i = 0; i < array.length; i++) {
             array[i] = new XYSeries(String.valueOf(i));
-            array[i].add(0,0);
+            array[i].add(0, 0);
         }
     }
 }

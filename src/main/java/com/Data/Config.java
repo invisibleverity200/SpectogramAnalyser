@@ -10,6 +10,7 @@ public class Config {
     public double voltageStepWidth = 0.01;
     int port = 1337;
     String hostname = "192.168.0.1";
+    int blockSize = 512;
 
     //Start-End Frequency
     //Channel-Names
@@ -50,6 +51,7 @@ public class Config {
             this.voltageStepWidth = Double.valueOf(config.getString("VoltageStepWidth"));
             this.port = config.getInt("Port");
             this.hostname = config.getString("Hostname");
+            this.blockSize = config.getInt("BlockSize");
             JsonArray channelNames = config.getJsonArray("channelNames");
             int i = 0;
             for (JsonValue channelName : channelNames) {
@@ -73,6 +75,7 @@ public class Config {
                 .add("channelNames", channelNames)
                 .add("Hostname", hostname)
                 .add("Port", port)
+                .add("BlockSize", blockSize)
                 .build();
         return config;
     }

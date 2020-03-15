@@ -16,7 +16,7 @@ public class BarChart implements Charts {
 
     public ChartPanel init(XYSeries[] dataSet) {
         for (int i = 0; i < dataSet.length; i++) {
-            if ( i < this.dataSet.size()) {
+            if (i < this.dataSet.size()) {
                 this.dataSet.set(i, dataSet[i]);
             } else {
                 this.dataSet.add(dataSet[i]);
