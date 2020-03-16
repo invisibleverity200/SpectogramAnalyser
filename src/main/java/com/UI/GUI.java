@@ -12,7 +12,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class GUI extends JFrame {
     public GUI() {
@@ -44,7 +43,8 @@ public class GUI extends JFrame {
         BarChart barChart = new BarChart();
         final AudioClient[] client = {null};
         final Thread[] clientThread = new Thread[1];
-        BarChartDataSetGenerator dataSetGenerator = new BarChartDataSetGenerator();
+
+        JButton connectButton = new JButton("Connect");
 
         JMenuBar menuBar = new JMenuBar();
         JMenu settingsMenu = new JMenu("Settings");
@@ -60,24 +60,43 @@ public class GUI extends JFrame {
             JDialog settingDialog = new JDialog();
             JPanel panel = new JPanel();
 
-            JTextField startEndFrequencyField = new JTextField("Start-End Frequency");
-            JTextField VoltageStepWidthField = new JTextField("Voltage step width");
-            JTextField ipAndPortField = new JTextField("Hostname:Port");
+            JTextField startEndFrequencyField = new JTextField(config.startFrequency + "-" + config.endFrequency);
+            JTextField VoltageStepWidthField = new JTextField(String.valueOf(config.voltageStepWidth));
+            JTextField ipAndPortField = new JTextField(config.hostname + ":" + config.port);
 
             JButton applyButton = new JButton("Apply");
             JButton saveButton = new JButton("Save");
 
-            applyButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    config.updateConfig(Integer.valueOf(startEndFrequencyField.getText().split("-")[0]), Integer.valueOf(startEndFrequencyField.getText().split("-")[1]), Double.valueOf(VoltageStepWidthField.getText()), Integer.valueOf(ipAndPortField.getText().split(":")[1]), ipAndPortField.getText().split(":")[0]);
+            applyButton.addActionListener(e1 -> {
+                try {
+                    String[] startEndFrequency = startEndFrequencyField.getText().split("-");
+                    double voltageStepWidth = Double.valueOf(VoltageStepWidthField.getText());
+                    String[] hostnamePort = ipAndPortField.getText().split(":");
+                    //192.168.1.1
+                    if (startEndFrequency.length == 2 && hostnamePort.length == 2 && hostnamePort[0].split("\\.").length == 4) {
+                        config.updateConfig(Integer.valueOf(startEndFrequency[0]), Integer.valueOf(startEndFrequency[1]), voltageStepWidth, Integer.valueOf(hostnamePort[1]), hostnamePort[0]);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Not allowed Structure", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException e2) {
+                    JOptionPane.showMessageDialog(null, "Strings are not allowed in Setting fields", "An Error occurred", JOptionPane.ERROR_MESSAGE);
                 }
             });
 
-            saveButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    config.updateConfig(Integer.valueOf(startEndFrequencyField.getText().split("-")[0]), Integer.valueOf(startEndFrequencyField.getText().split("-")[1]), Double.valueOf(VoltageStepWidthField.getText()), Integer.valueOf(ipAndPortField.getText().split(":")[1]), ipAndPortField.getText().split(":")[0]);
-                    config.writeConfigFile();
+            saveButton.addActionListener(e12 -> {
+                try {
+                    String[] startEndFrequency = startEndFrequencyField.getText().split("-");
+                    double voltageStepWidth = Double.valueOf(VoltageStepWidthField.getText());
+                    String[] hostnamePort = ipAndPortField.getText().split(":");
+
+                    if (startEndFrequency.length == 2 && hostnamePort.length == 2 && hostnamePort[0].split("\\.").length == 4) {
+                        config.updateConfig(Integer.valueOf(startEndFrequency[0]), Integer.valueOf(startEndFrequency[1]), voltageStepWidth, Integer.valueOf(hostnamePort[1]), hostnamePort[0]);
+                        config.writeConfigFile();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Not allowed Structure", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException e2) {
+                    JOptionPane.showMessageDialog(null, "Strings are not allowed in Setting fields", "An Error occurred", JOptionPane.ERROR_MESSAGE);
                 }
             });
 
@@ -122,18 +141,44 @@ public class GUI extends JFrame {
             i++;
         }
 
-        JMenuItem stopContinueOption = new JMenuItem("frezze Connection");
+        JMenuItem stopContinueOption = new JMenuItem("freeze Connection");
         stopContinueOption.addActionListener((ActionEvent e) -> {
-            if (stopContinueOption.getText().equals("frezz Connection")) {
+            if (stopContinueOption.getText().equals("freeze Connection")) {
                 stopContinueOption.setText("continue Connection");
             } else {
-                stopContinueOption.setText("frezz Connection");
+                stopContinueOption.setText("freeze Connection");
+            }
+        });
+
+        connectButton.addActionListener((ActionEvent e) -> {
+            int[] selectedChannels = getSelectedChannels(channelItems, config);
+            if (selectedChannels.length != 0) {
+                XYSeries[] initArray = new XYSeries[selectedChannels.length];//TODO init richtig machen
+                for (int x = 0; x < initArray.length; x++) {
+                    initArray[x] = new XYSeries(config.channelNames.get(selectedChannels[x]));
+                    initArray[x].add(0, 0);
+                }
+                ChartPanel chartPanel = barChart.init(initArray);
+                setContentPane(chartPanel); //TODO bug
+                revalidate();
+                repaint();
+                pack();
+
+                client[0] = new AudioClient();
+                clientThread[0] = new Updater(barChart, client[0], config); //TODO make this correct
+                clientThread[0].start();
+            } else {
+                JOptionPane.showMessageDialog(null, "You have to select at least one channel", "An Error occurred", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         JMenuItem cancel = new JMenuItem("cancel Connection");
         cancel.addActionListener((ActionEvent e) -> {
-            getContentPane().remove(getContentPane());
+            clientThread[0].stop();
+            setContentPane(new JPanel());
+            setLayout(new GridLayout());
+            setSize(400,400);
+            add(connectButton);
             repaint();
             revalidate();
             pack();
@@ -142,71 +187,44 @@ public class GUI extends JFrame {
         JMenuItem reload = new JMenuItem("reload");
         reload.addActionListener((ActionEvent e) -> {
             int[] selectedChannels = getSelectedChannels(channelItems, config);
-            XYSeries[] initArray = new XYSeries[selectedChannels.length];
-            int index = 0;
-            for (AudChannel channel : client[0].channels) {
-                if (channel.channelIndex == selectedChannels[index]) {
-                    initArray[index] = channel.getXYSeries(config);
-                    index++;
-                }
-            }
+            if (selectedChannels.length != 0) {
+                XYSeries[] initArray = new XYSeries[selectedChannels.length];
 
-            ChartPanel chartPanel = barChart.init(initArray);
-            if (chartPanel != null) {
-                setContentPane(chartPanel); //TODO bug
+                for (int x = 0; x < initArray.length; x++) {
+                    initArray[x] = new XYSeries(config.channelNames.get(selectedChannels[x]));
+                    initArray[x].add(0, 0);
+                }
+
+                ChartPanel chartPanel = barChart.init(initArray);
+                if (chartPanel != null) {
+                    setContentPane(chartPanel); //TODO bug
+                    revalidate();
+                    repaint();
+                    pack();
+                } else {
+                    JOptionPane.showMessageDialog(null, "No valid data source", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+                }
+
                 revalidate();
                 repaint();
                 pack();
             } else {
-                JOptionPane.showMessageDialog(null, "No valid data source", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "You have to select al least one channel", "An Error occurred", JOptionPane.ERROR_MESSAGE);
             }
-
-            revalidate();
-            repaint();
-            pack();
-            //
         });
 
         operations.add(reload);
         operations.add(stopContinueOption);
         operations.add(cancel);
 
-        JButton plotButton = new JButton("Connect");
 
-        plotButton.addActionListener((ActionEvent e) -> {
-            AudChannel[] channels = new AudChannel[16];
-            /*dataSetGenerator.createDataSet(null,null,config.startFrequency,config.endFrequency)
-            barChart.init();*/
-            int[] selectedChannels = getSelectedChannels(channelItems, config);
-            XYSeries[] s = new XYSeries[selectedChannels.length];//TODO init richtig machen
-            XYSeries series = new XYSeries("test");
-            series.add(1, 2);
-            s[0] = series; //
-            ChartPanel chartPanel = barChart.init(s);
-            if (chartPanel != null) {
-                setContentPane(chartPanel); //TODO bug
-                revalidate();
-                repaint();
-                pack();
-            } else {
-                JOptionPane.showMessageDialog(null, "No valid data source", "An Error occurred", JOptionPane.ERROR_MESSAGE);
-            }
-            client[0] = new AudioClient();
-            clientThread[0] = new Updater(barChart, client[0], config); //TODO make this correct
-            clientThread[0].start();
-        });
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        setLayout(new GridBagLayout());
-        add(plotButton, gbc);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
+        setLayout(new GridLayout());
+        add(connectButton);
 
         setJMenuBar(menuBar);
 
         setVisible(true);
-        setSize(400, 400);
+        setSize(280 , 100);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
     }

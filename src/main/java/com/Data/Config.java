@@ -9,9 +9,9 @@ public class Config {
     public int endFrequency = 1000;
     public ArrayList<String> channelNames = new ArrayList<>();
     public double voltageStepWidth = 0.01;
-    int port = 1337;
-    String hostname = "192.168.0.1";
-    int blockSize = 512;
+    public int port = 1337;
+    public String hostname = "192.168.0.1";
+    public int blockSize = 512;
 
     //Start-End Frequency
     //Channel-Names
@@ -38,6 +38,8 @@ public class Config {
         this.startFrequency = startFrequency;
         this.endFrequency = endFrequency;
         this.voltageStepWidth = voltageStepWidth;
+        this.port = port;
+        this.hostname = hostname;
     }
 
     public void readConfigFile() {
@@ -66,16 +68,16 @@ public class Config {
     }
 
     private JsonObject createJsonObject() {
-       /* JsonArrayBuilder channelNames = Json.createArrayBuilder();
+        JsonArrayBuilder channelNames = Json.createArrayBuilder();
         for (String channelName : this.channelNames) {
             channelNames.add(channelName);
             System.out.println(channelName);
-        }*/
+        }
         JsonObject config = Json.createObjectBuilder()
                 .add("StartFrequency", startFrequency)
                 .add("EndFrequency", endFrequency)
                 .add("VoltageStepWidth", String.valueOf(voltageStepWidth))
-                // .add("channelNames", channelNames)
+                .add("channelNames", channelNames)
                 .add("Hostname", hostname)
                 .add("Port", port)
                 .add("BlockSize", blockSize)
