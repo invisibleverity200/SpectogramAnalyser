@@ -69,9 +69,11 @@ public class Config {
 
     private JsonObject createJsonObject() {
         JsonArrayBuilder channelNames = Json.createArrayBuilder();
+        int index = 0;
         for (String channelName : this.channelNames) {
-            channelNames.add(channelName);
+            channelNames.add(index, channelName);
             System.out.println(channelName);
+            index++;
         }
         JsonObject config = Json.createObjectBuilder()
                 .add("StartFrequency", startFrequency)

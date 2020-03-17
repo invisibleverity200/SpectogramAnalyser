@@ -167,7 +167,7 @@ public class GUI extends JFrame {
                 client[0] = new AudioClient();
                 if (client[0].connectTo(config.hostname, config.port)) {
                     System.out.println("Connection established");
-                }else {
+                } else {
                     JOptionPane.showMessageDialog(null, "Client is not able to connect to the Server", "An Error occurred", JOptionPane.ERROR_MESSAGE);
                 }
                 clientThread[0] = new Updater(barChart, client[0], config); //TODO make this correct
@@ -179,6 +179,9 @@ public class GUI extends JFrame {
 
         JMenuItem cancel = new JMenuItem("cancel Connection");
         cancel.addActionListener((ActionEvent e) -> {
+            if (!client[0].stop()) {
+                JOptionPane.showMessageDialog(null, "No Connection to Close", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+            }
             clientThread[0].stop();
             //cancel Connection
             setContentPane(new JPanel());
@@ -199,6 +202,7 @@ public class GUI extends JFrame {
                 for (int x = 0; x < initArray.length; x++) {
                     initArray[x] = new XYSeries(config.channelNames.get(selectedChannels[x]));
                     initArray[x].add(0, 0);
+                    // initArray[x] = client[0].channels[selectedChannels[x]].getXYSeries(config);
                 }
 
                 ChartPanel chartPanel = barChart.init(initArray);

@@ -7,7 +7,7 @@ public class AudChannel {
     public int channelIndex;
     public int[] channelSpectrum;
 
-    AudChannel(int channelIndex, int[] channelSpectrum) {
+    public AudChannel(int channelIndex, int[] channelSpectrum) {
         this.channelIndex = channelIndex;
         this.channelSpectrum = channelSpectrum;
     }

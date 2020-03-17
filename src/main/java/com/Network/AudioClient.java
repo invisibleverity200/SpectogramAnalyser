@@ -1,8 +1,10 @@
 package com.Network;
 
 import com.Data.AudChannel;
+import com.Data.Config;
 import com.UI.BarChart;
 
+import java.awt.event.ItemEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -39,4 +41,49 @@ public class AudioClient implements Client {
     public AudChannel[] getNextChannelMeasurements(BarChart chart) {
         return new AudChannel[0];
     }
+
+    @Override
+    public boolean stop() {
+        try {
+            s.close();
+            outputStream.close();
+            dataInputStream.close();
+        } catch (IOException | NullPointerException e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean startReceiving(Config config) {
+        try {
+            long temp = 0;
+            channels = new AudChannel[config.channelNames.size()];
+            outputStream.write(1);
+            Thread.sleep(100);
+            while (true) {
+                while (dataInputStream.available() > 0) {
+                    temp = System.currentTimeMillis();
+                    if (dataInputStream.available() > config.blockSize) {
+                        for (int i = 0; i < config.channelNames.size(); i++) {
+                            int channelIndex = dataInputStream.readInt();
+                            int[] channelSpectrum = new int[config.blockSize];
+                            for (int y = 0; y < channelSpectrum.length; y++) {
+                                channelSpectrum[y] = dataInputStream.readInt();
+                            }
+                            channels[i] = new AudChannel(channelIndex, channelSpectrum);
+                        }
+                    }
+                }
+                if ((System.currentTimeMillis() - temp) > 200) {
+                    return false;
+                }
+                System.out.println("No more Bytes in Buffer");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
 }
