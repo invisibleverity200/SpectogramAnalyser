@@ -165,6 +165,11 @@ public class GUI extends JFrame {
                 pack();
 
                 client[0] = new AudioClient();
+                if (client[0].connectTo(config.hostname, config.port)) {
+                    System.out.println("Connection established");
+                }else {
+                    JOptionPane.showMessageDialog(null, "Client is not able to connect to the Server", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+                }
                 clientThread[0] = new Updater(barChart, client[0], config); //TODO make this correct
                 clientThread[0].start();
             } else {
@@ -175,9 +180,10 @@ public class GUI extends JFrame {
         JMenuItem cancel = new JMenuItem("cancel Connection");
         cancel.addActionListener((ActionEvent e) -> {
             clientThread[0].stop();
+            //cancel Connection
             setContentPane(new JPanel());
             setLayout(new GridLayout());
-            setSize(400,400);
+            setSize(400, 400);
             add(connectButton);
             repaint();
             revalidate();
@@ -185,7 +191,7 @@ public class GUI extends JFrame {
         });
 
         JMenuItem reload = new JMenuItem("reload");
-        reload.addActionListener((ActionEvent e) -> {
+        reload.addActionListener((ActionEvent e) -> { // FINISHED I GUESS
             int[] selectedChannels = getSelectedChannels(channelItems, config);
             if (selectedChannels.length != 0) {
                 XYSeries[] initArray = new XYSeries[selectedChannels.length];
@@ -224,7 +230,7 @@ public class GUI extends JFrame {
         setJMenuBar(menuBar);
 
         setVisible(true);
-        setSize(280 , 100);
+        setSize(280, 100);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
     }
