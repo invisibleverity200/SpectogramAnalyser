@@ -165,6 +165,7 @@ public class GUI extends JFrame {
                 pack();
 
                 client[0] = new AudioClient();
+                client[0].selectedChannels = selectedChannels;
                 if (client[0].connectTo(config.hostname, config.port)) {
                     System.out.println("Connection established");
                 } else {
@@ -198,6 +199,7 @@ public class GUI extends JFrame {
             int[] selectedChannels = getSelectedChannels(channelItems, config);
             if (selectedChannels.length != 0) {
                 XYSeries[] initArray = new XYSeries[selectedChannels.length];
+                client[0].selectedChannels = selectedChannels;
 
                 for (int x = 0; x < initArray.length; x++) {
                     initArray[x] = new XYSeries(config.channelNames.get(selectedChannels[x]));

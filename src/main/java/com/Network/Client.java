@@ -13,6 +13,6 @@ public interface Client {
 
     boolean stop();
 
-    boolean startReceiving(Config config);
+    boolean startReceiving(Config config, BarChart chart);
 }
 

@@ -15,6 +15,7 @@ public class AudioClient implements Client {
     Socket s;
     DataOutputStream outputStream;
     DataInputStream dataInputStream;
+    public int[] selectedChannels;
 
     @Override
     public boolean getStatus() {
@@ -29,8 +30,15 @@ public class AudioClient implements Client {
             s = new Socket(hostname, port);
             outputStream = new DataOutputStream(s.getOutputStream());
             dataInputStream = new DataInputStream(s.getInputStream());
+            //
+            outputStream.write(1);
+            Thread.sleep(100);
+            while (dataInputStream.available() > 0) {
+                char charByte = (char) dataInputStream.readByte();
+                System.out.println(charByte);
+            }
 
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             return false;
         }
@@ -55,8 +63,9 @@ public class AudioClient implements Client {
     }
 
     @Override
-    public boolean startReceiving(Config config) {
+    public boolean startReceiving(Config config, BarChart chart) {
         try {
+            int[][] updateDataSet = new int[selectedChannels.length][config.blockSize];
             long temp = 0;
             channels = new AudChannel[config.channelNames.size()];
             outputStream.write(1);
@@ -73,12 +82,16 @@ public class AudioClient implements Client {
                             }
                             channels[i] = new AudChannel(channelIndex, channelSpectrum);
                         }
+
+                        for (int x = 0; x < updateDataSet.length; x++) {
+                            updateDataSet[x] = channels[selectedChannels[x]].channelSpectrum;
+                        }
+                        chart.update(updateDataSet, (config.endFrequency - config.startFrequency) / config.blockSize, config.startFrequency);
                     }
                 }
                 if ((System.currentTimeMillis() - temp) > 200) {
                     return false;
                 }
-                System.out.println("No more Bytes in Buffer");
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
