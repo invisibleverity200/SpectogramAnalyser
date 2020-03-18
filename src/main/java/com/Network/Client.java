@@ -11,7 +11,7 @@ public interface Client {
 
     AudChannel[] getNextChannelMeasurements(BarChart chart);
 
-    boolean stop();
+    boolean closeConnection();
 
     boolean startReceiving(Config config, BarChart chart);
 }

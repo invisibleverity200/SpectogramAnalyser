@@ -30,9 +30,18 @@ public class Updater extends Thread {
             e.printStackTrace();
         }
         chart.update(i, 1000, config.startFrequency);*/
-       if(!client.startReceiving(config,chart)){
-          // this.stop();
-           JOptionPane.showMessageDialog(null, "Server timeout", "Information", JOptionPane.INFORMATION_MESSAGE);
-       }
+        while (true) {
+            if (!client.startReceiving(config, chart)) {
+                int returnVal = JOptionPane.showConfirmDialog(null, "Server timeout\n Try to reconnect?", "Information", JOptionPane.YES_NO_OPTION);
+                if (returnVal == JOptionPane.YES_OPTION) {
+                    client.reconnectToServer();
+                }else {
+                    JOptionPane.showMessageDialog(null, "closed connection", "Information", JOptionPane.INFORMATION_MESSAGE);
+                    client.closeConnection();
+                    this.stop();
+                }
+
+            }
+        }
     }
 }

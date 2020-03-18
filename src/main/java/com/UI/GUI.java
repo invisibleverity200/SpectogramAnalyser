@@ -1,7 +1,5 @@
 package com.UI;
 
-import com.Data.AudChannel;
-import com.Data.BarChartDataSetGenerator;
 import com.Data.Config;
 import com.Network.AudioClient;
 import com.Network.Updater;
@@ -156,7 +154,7 @@ public class GUI extends JFrame {
 
         JMenuItem cancel = new JMenuItem("cancel Connection");
         cancel.addActionListener((ActionEvent e) -> {
-            if (!client[0].stop()) {
+            if (!client[0].closeConnection()) {
                 JOptionPane.showMessageDialog(null, "No Connection to Close", "An Error occurred", JOptionPane.ERROR_MESSAGE);
             }
             clientThread[0].stop();
