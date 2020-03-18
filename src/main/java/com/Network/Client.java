@@ -5,11 +5,8 @@ import com.Data.Config;
 import com.UI.BarChart;
 
 public interface Client {
-    boolean getStatus();
 
     boolean connectTo(String hostname, int port);
-
-    AudChannel[] getNextChannelMeasurements(BarChart chart);
 
     boolean closeConnection();
 

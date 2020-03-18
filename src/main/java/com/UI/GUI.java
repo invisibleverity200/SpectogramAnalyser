@@ -44,11 +44,11 @@ public class GUI extends JFrame {
             applyButton.addActionListener(e1 -> {
                 try {
                     String[] startEndFrequency = startEndFrequencyField.getText().split("-");
-                    double voltageStepWidth = Double.valueOf(VoltageStepWidthField.getText());
+                    double voltageStepWidth = Double.parseDouble(VoltageStepWidthField.getText());
                     String[] hostnamePort = ipAndPortField.getText().split(":");
                     //192.168.1.1
                     if (startEndFrequency.length == 2 && hostnamePort.length == 2 && hostnamePort[0].split("\\.").length == 4) {
-                        config.updateConfig(Integer.valueOf(startEndFrequency[0]), Integer.valueOf(startEndFrequency[1]), voltageStepWidth, Integer.valueOf(hostnamePort[1]), hostnamePort[0]);
+                        config.updateConfig(Integer.parseInt(startEndFrequency[0]), Integer.parseInt(startEndFrequency[1]), voltageStepWidth, Integer.parseInt(hostnamePort[1]), hostnamePort[0]);
                     } else {
                         JOptionPane.showMessageDialog(null, "Not allowed Structure", "An Error occurred", JOptionPane.ERROR_MESSAGE);
                     }
@@ -60,11 +60,11 @@ public class GUI extends JFrame {
             saveButton.addActionListener(e12 -> {
                 try {
                     String[] startEndFrequency = startEndFrequencyField.getText().split("-");
-                    double voltageStepWidth = Double.valueOf(VoltageStepWidthField.getText());
+                    double voltageStepWidth = Double.parseDouble(VoltageStepWidthField.getText());
                     String[] hostnamePort = ipAndPortField.getText().split(":");
 
                     if (startEndFrequency.length == 2 && hostnamePort.length == 2 && hostnamePort[0].split("\\.").length == 4) {
-                        config.updateConfig(Integer.valueOf(startEndFrequency[0]), Integer.valueOf(startEndFrequency[1]), voltageStepWidth, Integer.valueOf(hostnamePort[1]), hostnamePort[0]);
+                        config.updateConfig(Integer.parseInt(startEndFrequency[0]), Integer.parseInt(startEndFrequency[1]), voltageStepWidth, Integer.parseInt(hostnamePort[1]), hostnamePort[0]);
                         config.writeConfigFile();
                     } else {
                         JOptionPane.showMessageDialog(null, "Not allowed Structure", "An Error occurred", JOptionPane.ERROR_MESSAGE);
@@ -73,7 +73,6 @@ public class GUI extends JFrame {
                     JOptionPane.showMessageDialog(null, "Strings are not allowed in Setting fields", "An Error occurred", JOptionPane.ERROR_MESSAGE);
                 }
             });
-
 
             GridBagConstraints gbc = new GridBagConstraints();
             panel.setLayout(new GridBagLayout());
@@ -125,40 +124,40 @@ public class GUI extends JFrame {
         });
 
         connectButton.addActionListener((ActionEvent e) -> {
-            int[] selectedChannels = getSelectedChannels(channelItems, config);
-            if (selectedChannels.length != 0) {
-                XYSeries[] initArray = new XYSeries[selectedChannels.length];
-                for (int x = 0; x < initArray.length; x++) {
-                    initArray[x] = new XYSeries(config.channelNames.get(selectedChannels[x]));
-                    initArray[x].add(0, 0);
-                }
-                ChartPanel chartPanel = barChart.init(initArray);
-                setContentPane(chartPanel);
-                revalidate();
-                repaint();
-                pack();
+            client[0] = new AudioClient();
+            if (client[0].connectTo(config.hostname, config.port)) {
+                int[] selectedChannels = getSelectedChannels(channelItems, config);
+                if (selectedChannels.length != 0) {
+                    XYSeries[] initArray = new XYSeries[selectedChannels.length];
+                    for (int x = 0; x < initArray.length; x++) {
+                        initArray[x] = new XYSeries(config.channelNames.get(selectedChannels[x]));
+                        initArray[x].add(0, 0);
+                    }
+                    ChartPanel chartPanel = barChart.init(initArray);
+                    setContentPane(chartPanel);
+                    revalidate();
+                    repaint();
+                    pack();
 
-                client[0] = new AudioClient();
-                client[0].selectedChannels = selectedChannels;
-                if (client[0].connectTo(config.hostname, config.port)) {
+                    client[0].selectedChannels = selectedChannels;
+
                     System.out.println("Connection established");
+
+                    clientThread[0] = new Updater(barChart, client[0], config); //TODO make this correct
+                    clientThread[0].start();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Client is not able to connect to the Server", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "You have to select at least one channel", "An Error occurred", JOptionPane.ERROR_MESSAGE);
                 }
-                clientThread[0] = new Updater(barChart, client[0], config); //TODO make this correct
-                clientThread[0].start();
             } else {
-                JOptionPane.showMessageDialog(null, "You have to select at least one channel", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Client is not able to connect to the Server", "An Error occurred", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         JMenuItem cancel = new JMenuItem("cancel Connection");
         cancel.addActionListener((ActionEvent e) -> {
-            if (!client[0].closeConnection()) {
-                JOptionPane.showMessageDialog(null, "No Connection to Close", "An Error occurred", JOptionPane.ERROR_MESSAGE);
-            }
+            client[0].closeConnection();
+
             clientThread[0].stop();
-            //cancel Connection
             setContentPane(new JPanel());
             setLayout(new GridLayout());
             setSize(400, 400);
@@ -229,10 +228,4 @@ public class GUI extends JFrame {
         return selectedChannels;
     }
 
-    private void fillArray(XYSeries[] array) { //TODO hier brauche ich noch die Config um die Channel richtig zubennenen.
-        for (int i = 0; i < array.length; i++) {
-            array[i] = new XYSeries(String.valueOf(i));
-            array[i].add(0, 0);
-        }
-    }
 }

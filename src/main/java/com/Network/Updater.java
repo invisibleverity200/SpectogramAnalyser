@@ -23,19 +23,14 @@ public class Updater extends Thread {
 
     @Override
     public void run() {
-       /* int[][] i = {{2, 3}, {2, 6},{3,9,12,12,100}};
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        chart.update(i, 1000, config.startFrequency);*/
         while (true) {
             if (!client.startReceiving(config, chart)) {
                 int returnVal = JOptionPane.showConfirmDialog(null, "Server timeout\n Try to reconnect?", "Information", JOptionPane.YES_NO_OPTION);
                 if (returnVal == JOptionPane.YES_OPTION) {
                     client.reconnectToServer();
-                }else {
+
+
+                } else {
                     JOptionPane.showMessageDialog(null, "closed connection", "Information", JOptionPane.INFORMATION_MESSAGE);
                     client.closeConnection();
                     this.stop();
