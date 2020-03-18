@@ -3,8 +3,7 @@ package com.Data;
 import org.jfree.data.xy.XYSeries;
 
 public class AudChannel {
-    //int ChannelVame int[512] value
-    public int channelIndex;
+    private int channelIndex;
     public int[] channelSpectrum;
 
     public AudChannel(int channelIndex, int[] channelSpectrum) {
@@ -13,7 +12,6 @@ public class AudChannel {
     }
 
     public XYSeries getXYSeries(Config config) {
-        //TODO: write FUnction
         System.out.println(config.channelNames.get(channelIndex - 1));
         XYSeries xySeries = new XYSeries(config.channelNames.get(channelIndex - 1));
         for (int i = 0; i < channelSpectrum.length; i++) {

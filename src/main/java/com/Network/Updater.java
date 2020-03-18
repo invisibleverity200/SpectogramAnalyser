@@ -25,10 +25,9 @@ public class Updater extends Thread {
     public void run() {
         while (true) {
             if (!client.startReceiving(config, chart)) {
-                int returnVal = JOptionPane.showConfirmDialog(null, "Server timeout\n Try to reconnect?", "Information", JOptionPane.YES_NO_OPTION);
+                int returnVal = JOptionPane.showConfirmDialog(null, "Server timeout\n/Cant reach Server\nTry to reconnect?", "Information", JOptionPane.YES_NO_OPTION);
                 if (returnVal == JOptionPane.YES_OPTION) {
                     client.reconnectToServer();
-
 
                 } else {
                     JOptionPane.showMessageDialog(null, "closed connection", "Information", JOptionPane.INFORMATION_MESSAGE);

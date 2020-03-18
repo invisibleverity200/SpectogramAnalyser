@@ -125,9 +125,10 @@ public class GUI extends JFrame {
 
         connectButton.addActionListener((ActionEvent e) -> {
             client[0] = new AudioClient();
-            if (client[0].connectTo(config.hostname, config.port)) {
-                int[] selectedChannels = getSelectedChannels(channelItems, config);
-                if (selectedChannels.length != 0) {
+            int[] selectedChannels = getSelectedChannels(channelItems, config);
+            if (selectedChannels.length != 0) {
+                if (client[0].connectTo(config.hostname, config.port)) {
+
                     XYSeries[] initArray = new XYSeries[selectedChannels.length];
                     for (int x = 0; x < initArray.length; x++) {
                         initArray[x] = new XYSeries(config.channelNames.get(selectedChannels[x]));
@@ -146,15 +147,18 @@ public class GUI extends JFrame {
                     clientThread[0] = new Updater(barChart, client[0], config); //TODO make this correct
                     clientThread[0].start();
                 } else {
-                    JOptionPane.showMessageDialog(null, "You have to select at least one channel", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Client is not able to connect to the Server", "An Error occurred", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Client is not able to connect to the Server", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "You have to select at least one channel", "An Error occurred", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         JMenuItem cancel = new JMenuItem("cancel Connection");
-        cancel.addActionListener((ActionEvent e) -> {
+        cancel.addActionListener((
+                ActionEvent e) ->
+
+        {
             client[0].closeConnection();
 
             clientThread[0].stop();
@@ -168,7 +172,10 @@ public class GUI extends JFrame {
         });
 
         JMenuItem reload = new JMenuItem("reload");
-        reload.addActionListener((ActionEvent e) -> { // FINISHED I GUESS
+        reload.addActionListener((
+                ActionEvent e) ->
+
+        { // FINISHED I GUESS
             int[] selectedChannels = getSelectedChannels(channelItems, config);
             if (selectedChannels.length != 0) {
                 XYSeries[] initArray = new XYSeries[selectedChannels.length];
@@ -204,12 +211,15 @@ public class GUI extends JFrame {
 
 
         setLayout(new GridLayout());
+
         add(connectButton);
 
         setJMenuBar(menuBar);
 
         setVisible(true);
+
         setSize(280, 100);
+
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
     }
