@@ -8,6 +8,7 @@ import java.awt.event.ItemEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 
 public class AudioClient implements Client {
@@ -31,14 +32,15 @@ public class AudioClient implements Client {
             outputStream = new DataOutputStream(s.getOutputStream());
             dataInputStream = new DataInputStream(s.getInputStream());
             //
-            outputStream.write(1);
+          /*  outputStream.write(1);
             Thread.sleep(100);
             while (dataInputStream.available() > 0) {
-                char charByte = (char) dataInputStream.readByte();
-                System.out.println(charByte);
+                int number = dataInputStream.readInt();
+                System.out.println(number
+                );
             }
-
-        } catch (IOException | InterruptedException e) {
+*/
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
@@ -53,6 +55,7 @@ public class AudioClient implements Client {
     @Override
     public boolean stop() {
         try {
+            outputStream.write(0); //tells server to stop sending data
             s.close();
             outputStream.close();
             dataInputStream.close();
@@ -73,7 +76,7 @@ public class AudioClient implements Client {
             while (true) {
                 while (dataInputStream.available() > 0) {
                     temp = System.currentTimeMillis();
-                    if (dataInputStream.available() > config.blockSize) {
+                    if (dataInputStream.available() > (config.blockSize * config.channelNames.size() * Integer.BYTES)) { // in byte um wandeln
                         for (int i = 0; i < config.channelNames.size(); i++) {
                             int channelIndex = dataInputStream.readInt();
                             int[] channelSpectrum = new int[config.blockSize];

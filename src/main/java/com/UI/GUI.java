@@ -15,30 +15,6 @@ import java.util.ArrayList;
 
 public class GUI extends JFrame {
     public GUI() {
-       /* int[] i = {1, 2, 3};
-        int[] y = {4, 5, 6};
-        int[] temp = {7,8,9};
-        int[][] x = {i,y,temp};
-        BarChartDataSet barChartDataSet = new BarChartDataSet();
-        XYSeries[] xySeries = {barChartDataSet.createDataSet(i, "test", 1000, 1000),barChartDataSet.createDataSet(y, "test2", 1000, 1000)};
-
-        XYSeries[] xySeriess = {barChartDataSet.createDataSet(i, "test1", 1000, 1000),barChartDataSet.createDataSet(y, "test2", 1000, 1000),barChartDataSet.createDataSet(temp,"test3",1000,1000)};
-        JFrame frame = new JFrame();
-        BarChart barChart = new BarChart();
-        frame.setContentPane(barChart.init(xySeries));
-        frame.setVisible(true);
-        frame.setSize(600,600);
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        frame.getContentPane().removeAll();
-        frame.setContentPane(barChart.init(xySeriess));
-        frame.repaint();
-        frame.revalidate();
-        frame.pack();*/
-
         Config config = new Config();
         BarChart barChart = new BarChart();
         final AudioClient[] client = {null};
@@ -133,7 +109,7 @@ public class GUI extends JFrame {
 
         settingsMenu.add(menuItem);
 
-        JCheckBoxMenuItem[] channelItems = new JCheckBoxMenuItem[config.channelNames.size()];
+        JCheckBoxMenuItem[] channelItems = new JCheckBoxMenuItem[config.channelNames.size()]; //for every channel name in the config file will be created a checkbox in the Menu bar
         int i = 0;
         for (String channelName : config.channelNames) {
             channelItems[i] = new JCheckBoxMenuItem(channelName);
@@ -153,13 +129,13 @@ public class GUI extends JFrame {
         connectButton.addActionListener((ActionEvent e) -> {
             int[] selectedChannels = getSelectedChannels(channelItems, config);
             if (selectedChannels.length != 0) {
-                XYSeries[] initArray = new XYSeries[selectedChannels.length];//TODO init richtig machen
+                XYSeries[] initArray = new XYSeries[selectedChannels.length];
                 for (int x = 0; x < initArray.length; x++) {
                     initArray[x] = new XYSeries(config.channelNames.get(selectedChannels[x]));
                     initArray[x].add(0, 0);
                 }
                 ChartPanel chartPanel = barChart.init(initArray);
-                setContentPane(chartPanel); //TODO bug
+                setContentPane(chartPanel);
                 revalidate();
                 repaint();
                 pack();
@@ -202,9 +178,9 @@ public class GUI extends JFrame {
                 client[0].selectedChannels = selectedChannels;
 
                 for (int x = 0; x < initArray.length; x++) {
-                    initArray[x] = new XYSeries(config.channelNames.get(selectedChannels[x]));
-                    initArray[x].add(0, 0);
-                    // initArray[x] = client[0].channels[selectedChannels[x]].getXYSeries(config);
+                    /*initArray[x] = new XYSeries(config.channelNames.get(selectedChannels[x]));
+                    initArray[x].add(0, 0);*/
+                    initArray[x] = client[0].channels[selectedChannels[x]].getXYSeries(config);
                 }
 
                 ChartPanel chartPanel = barChart.init(initArray);

@@ -14,9 +14,9 @@ public class AudChannel {
 
     public XYSeries getXYSeries(Config config) {
         //TODO: write FUnction
-        XYSeries xySeries = new XYSeries(config.channelNames.get(channelIndex));
+        XYSeries xySeries = new XYSeries(config.channelNames.get(channelIndex - 1));
         for (int i = 0; i < channelSpectrum.length; i++) {
-            xySeries.add(config.startFrequency + i * (config.endFrequency - config.startFrequency) / config.blockSize, channelSpectrum[i]);
+            xySeries.add(config.startFrequency + (i * ((config.endFrequency - config.startFrequency) / config.blockSize)), channelSpectrum[i]);
         }
         return xySeries;
     }
