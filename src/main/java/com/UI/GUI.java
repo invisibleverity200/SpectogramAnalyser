@@ -99,6 +99,7 @@ public class GUI extends JFrame {
 
             settingDialog.setContentPane(panel);
             settingDialog.setTitle("Settings");
+            pack();
             settingDialog.setVisible(true);
             settingDialog.setSize(150, 180);
         });
@@ -220,6 +221,8 @@ public class GUI extends JFrame {
         add(connectButton);
 
         setJMenuBar(menuBar);
+
+        pack();
 
         setVisible(true);
 
