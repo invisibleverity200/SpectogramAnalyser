@@ -98,10 +98,10 @@ public class GUI extends JFrame {
             panel.add(ipAndPortField, gbc);
 
             settingDialog.setContentPane(panel);
-            settingDialog.setTitle("Settings");
             pack();
-            settingDialog.setVisible(true);
+            settingDialog.setTitle("Settings");
             settingDialog.setSize(150, 180);
+            settingDialog.setVisible(true);
         });
         menuItem.setMnemonic(KeyEvent.VK_B);
 
