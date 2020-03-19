@@ -2,18 +2,15 @@ package com.UI;
 
 import com.Data.Config;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartFrame;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class BarChart implements Charts {
-    JFreeChart chart;
-    ArrayList<XYSeries> dataSet = new ArrayList<>();
+    private ArrayList<XYSeries> dataSet = new ArrayList<>();
 
     public ChartPanel init(XYSeries[] dataSet) {
         for (int i = 0; i < dataSet.length; i++) {
@@ -25,19 +22,18 @@ public class BarChart implements Charts {
         }
 
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
-        for (int i = 0; i < dataSet.length; i++) {
-            if (dataSet[i] != null) {
+        for (XYSeries xySeries : dataSet) {
+            if (xySeries != null) {
                 try {
-                    xySeriesCollection.addSeries(dataSet[i]);
+                    xySeriesCollection.addSeries(xySeries);
                 } catch (IllegalArgumentException e) {
                     System.out.println("\u001B[31m" + "this error is caused because the server sent to many or less channels!\nERROR(2003): " + e.getMessage());
                 }
             }
         }
         if (xySeriesCollection.getSeriesCount() != 0) {
-            chart = ChartFactory.createScatterPlot("SpectrumAnalyser", "Frequency in Hz", "Level in V", xySeriesCollection);
-            ChartPanel panel = new ChartPanel(chart);
-            return panel;
+            JFreeChart chart = ChartFactory.createScatterPlot("SpectrumAnalyser", "Frequency in Hz", "Level in V", xySeriesCollection);
+            return new ChartPanel(chart);
         }
 
         return null;

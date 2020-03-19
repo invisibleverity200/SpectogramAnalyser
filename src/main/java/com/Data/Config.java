@@ -28,8 +28,6 @@ public class Config {
             JsonWriter jsonWriter = Json.createWriter(fileWriter);
             jsonWriter.writeObject(createJsonObject());
             jsonWriter.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("\u001B[31m" + "ERROR: " + e.getMessage());
         } catch (IOException e) {
             System.out.println("\u001B[31m" + "ERROR: " + e.getMessage());
         }
@@ -43,7 +41,7 @@ public class Config {
         this.hostname = hostname;
     }
 
-    public void readConfigFile() {
+    private void readConfigFile() {
         try {
             InputStream inputStream = new FileInputStream("config.json");
             JsonReader reader = Json.createReader(inputStream);
@@ -52,7 +50,7 @@ public class Config {
 
             this.startFrequency = config.getInt("StartFrequency");
             this.endFrequency = config.getInt("EndFrequency");
-            this.voltageStepWidth = Double.valueOf(config.getString("VoltageStepWidth"));
+            this.voltageStepWidth = Double.parseDouble(config.getString("VoltageStepWidth"));
             this.port = config.getInt("Port");
             this.hostname = config.getString("Hostname");
             this.blockSize = config.getInt("BlockSize");
@@ -89,7 +87,7 @@ public class Config {
             channelNames.add(index, channelName);
             index++;
         }
-        JsonObject config = Json.createObjectBuilder()
+        return Json.createObjectBuilder()
                 .add("StartFrequency", startFrequency)
                 .add("EndFrequency", endFrequency)
                 .add("VoltageStepWidth", String.valueOf(voltageStepWidth))
@@ -98,11 +96,10 @@ public class Config {
                 .add("Port", port)
                 .add("BlockSize", blockSize)
                 .build();
-        return config;
     }
 
     private void flushFile() throws IOException {
-        FileWriter fwOb = null;
+        FileWriter fwOb;
         fwOb = new FileWriter("config.json", false);
         PrintWriter pwOb = new PrintWriter(fwOb, false);
         pwOb.flush();

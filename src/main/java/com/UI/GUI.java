@@ -178,7 +178,7 @@ public class GUI extends JFrame {
         { // FINISHED I GUESS
             int[] selectedChannels = getSelectedChannels(channelItems, config);
             if (selectedChannels.length != 0) {
-                XYSeries[] initArray = new XYSeries[selectedChannels.length];
+                XYSeries[] initArray = new XYSeries[selectedChannels.length];//FIXME possible bug
                 client[0].selectedChannels = selectedChannels;
 
                 for (int x = 0; x < initArray.length; x++) {

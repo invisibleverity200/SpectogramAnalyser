@@ -5,20 +5,18 @@ import com.Data.Config;
 import com.UI.BarChart;
 
 import javax.swing.*;
-import java.awt.event.ItemEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.Socket;
 
 public class AudioClient implements Client {
     public AudChannel[] channels;
-    Socket s;
-    DataOutputStream outputStream;
-    DataInputStream dataInputStream;
-    String hostname;
-    int port;
+    private Socket s;
+    private DataOutputStream outputStream;
+    private DataInputStream dataInputStream;
+    private String hostname;
+    private int port;
     public int[] selectedChannels;
 
     @Override
@@ -41,7 +39,7 @@ public class AudioClient implements Client {
     @Override
     public boolean closeConnection() {
         try {
-            outputStream.write(0); //tells server to stop sending data
+            outputStream.write(0);
             s.close();
             outputStream.close();
             dataInputStream.close();
@@ -92,7 +90,7 @@ public class AudioClient implements Client {
         }
     }
 
-    public boolean reconnectToServer() {
+    void reconnectToServer() {
         try {
             System.out.println("Hostname: " + hostname);
             System.out.println("Port:" + port);
@@ -100,9 +98,7 @@ public class AudioClient implements Client {
             outputStream = new DataOutputStream(s.getOutputStream());
             dataInputStream = new DataInputStream(s.getInputStream());
 
-        } catch (IOException e) {
-            return false;
+        } catch (IOException ignored) {
         }
-        return true;
     }
 }
