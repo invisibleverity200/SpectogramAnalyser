@@ -14,28 +14,27 @@ public class BarChart implements Charts {
 
     public ChartPanel init(XYSeries[] dataSet) {
         for (int i = 0; i < dataSet.length; i++) {
-            if (i < this.dataSet.size()) {
-                this.dataSet.set(i, dataSet[i]);
-            } else {
-                this.dataSet.add(dataSet[i]);
+            if (!(dataSet[i] == null)) { //FIXME possible bug
+                if (i < this.dataSet.size()) {
+                    this.dataSet.set(i, dataSet[i]);
+                } else {
+                    this.dataSet.add(dataSet[i]);
+                }
             }
         }
 
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
         for (XYSeries xySeries : dataSet) {
-            if (xySeries != null) {
-                try {
-                    xySeriesCollection.addSeries(xySeries);
-                } catch (IllegalArgumentException e) {
-                    System.out.println("\u001B[31m" + "this error is caused because the server sent to many or less channels!\nERROR(2003): " + e.getMessage());
-                }
+            try {
+                xySeriesCollection.addSeries(xySeries);
+            } catch (IllegalArgumentException e) {
+                System.out.println("\u001B[31m" + "this error is caused because the server sent´s to many or less channels!\nERROR(2003): " + e.getMessage());
             }
         }
         if (xySeriesCollection.getSeriesCount() != 0) {
             JFreeChart chart = ChartFactory.createScatterPlot("SpectrumAnalyser", "Frequency in Hz", "Level in V", xySeriesCollection);
             return new ChartPanel(chart);
         }
-
         return null;
     }
 

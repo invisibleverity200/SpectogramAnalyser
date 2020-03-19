@@ -14,9 +14,6 @@ public class Config {
     public String hostname = "192.168.0.1";
     public int blockSize = 512;
 
-    //Start-End Frequency
-    //Channel-Names
-    //Delta-[V]
     public Config() {
         readConfigFile();
     }

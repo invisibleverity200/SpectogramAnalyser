@@ -178,18 +178,22 @@ public class GUI extends JFrame {
         { // FINISHED I GUESS
             int[] selectedChannels = getSelectedChannels(channelItems, config);
             if (selectedChannels.length != 0) {
-                XYSeries[] initArray = new XYSeries[selectedChannels.length];//FIXME possible bug
+                client[0].reload = true;//FIXME possible bug
+                try {
+                    Thread.sleep(10); // not clean solution
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                XYSeries[] initArray = new XYSeries[selectedChannels.length];
                 client[0].selectedChannels = selectedChannels;
 
                 for (int x = 0; x < initArray.length; x++) {
-                    /*initArray[x] = new XYSeries(config.channelNames.get(selectedChannels[x]));
-                    initArray[x].add(0, 0);*/
                     initArray[x] = client[0].channels[selectedChannels[x]].getXYSeries(config);
                 }
 
                 ChartPanel chartPanel = barChart.init(initArray);
                 if (chartPanel != null) {
-                    setContentPane(chartPanel); //TODO bug
+                    setContentPane(chartPanel);
                     revalidate();
                     repaint();
                     pack();
@@ -200,6 +204,7 @@ public class GUI extends JFrame {
                 revalidate();
                 repaint();
                 pack();
+                client[0].reload = false;
             } else {
                 JOptionPane.showMessageDialog(null, "You have to select al least one channel", "An Error occurred", JOptionPane.ERROR_MESSAGE);
             }

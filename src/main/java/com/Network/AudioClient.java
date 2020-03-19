@@ -12,6 +12,7 @@ import java.net.Socket;
 
 public class AudioClient implements Client {
     public AudChannel[] channels;
+    public boolean reload = false;
     private Socket s;
     private DataOutputStream outputStream;
     private DataInputStream dataInputStream;
@@ -57,30 +58,32 @@ public class AudioClient implements Client {
             long temp = System.currentTimeMillis() - 20;
             outputStream.write(1);
             while (true) {
-                while (dataInputStream.available() > 0) {
+                if (dataInputStream.available() >= ((config.blockSize + 1) * config.channelNames.size() * Integer.BYTES)) {
                     temp = System.currentTimeMillis();
-                    if (dataInputStream.available() >= ((config.blockSize + 1) * config.channelNames.size() * Integer.BYTES)) { // in byte um wandeln
-                        channels = new AudChannel[config.channelNames.size()];
-                        for (int i = 0; i < config.channelNames.size(); i++) {
-                            int channelIndex = dataInputStream.readInt();
-                            if (channelIndex != i + 1) { //FIXME POSSIBLE BUG
-                                correctNumberOfPackages = false;
-                            }
-                            int[] channelSpectrum = new int[config.blockSize];
-                            for (int y = 0; y < channelSpectrum.length; y++) {
-                                channelSpectrum[y] = dataInputStream.readInt();
-                            }
-                            channels[i] = new AudChannel(channelIndex, channelSpectrum);
+                    channels = new AudChannel[config.channelNames.size()];
+                    for (int i = 0; i < config.channelNames.size(); i++) {
+                        int channelIndex = dataInputStream.readInt();
+                        if (channelIndex != i + 1) { //FIXME POSSIBLE BUG
+                            correctNumberOfPackages = false;
                         }
-                        if (!correctNumberOfPackages) {
-                            JOptionPane.showMessageDialog(null, "Server sent´s less channel packages than you have\n Fix the config file otherwise the shown data will be incorrect!!!", "An Error occurred", JOptionPane.WARNING_MESSAGE);
+                        int[] channelSpectrum = new int[config.blockSize];
+                        for (int y = 0; y < channelSpectrum.length; y++) {
+                            channelSpectrum[y] = dataInputStream.readInt();
                         }
-                        for (int x = 0; x < updateDataSet.length; x++) {
-                            updateDataSet[x] = channels[selectedChannels[x]].channelSpectrum;
-                        }
-                        chart.update(updateDataSet, (config.endFrequency - config.startFrequency) / config.blockSize, config.startFrequency, config);
+                        channels[i] = new AudChannel(channelIndex, channelSpectrum);
                     }
+                    if (!correctNumberOfPackages) {
+                        JOptionPane.showMessageDialog(null, "Server sent´s less channel packages than you have\n Fix the config file otherwise the shown data will be incorrect!!!", "An Error occurred", JOptionPane.WARNING_MESSAGE);
+                    }
+                    while (reload) {
+                    }
+
+                    for (int x = 0; x < updateDataSet.length; x++) {
+                        updateDataSet[x] = channels[selectedChannels[x]].channelSpectrum;
+                    }
+                    chart.update(updateDataSet, (config.endFrequency - config.startFrequency) / config.blockSize, config.startFrequency, config);
                 }
+
                 if ((System.currentTimeMillis() - temp) > 200) {
                     return false;
                 }
