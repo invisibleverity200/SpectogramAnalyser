@@ -165,7 +165,6 @@ public class GUI extends JFrame {
             clientThread[0].stop();
             setContentPane(new JPanel());
             setLayout(new GridLayout());
-            setSize(400, 400);
             add(connectButton);
             repaint();
             revalidate();
