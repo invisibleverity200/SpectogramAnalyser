@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Config {
     public int startFrequency = 1000;
     public int endFrequency = 1000;
-    public ArrayList<String> channelNames = new ArrayList<>(); //FIXME BUG: if server sents less packages than in config file some channels get the same name WTF
+    public ArrayList<String> channelNames = new ArrayList<>();
     public double voltageStepWidth = 0.01;
     public int port = 1337;
     public String hostname = "192.168.0.1";

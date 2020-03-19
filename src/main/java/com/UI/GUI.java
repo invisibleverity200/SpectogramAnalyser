@@ -144,7 +144,7 @@ public class GUI extends JFrame {
 
                     System.out.println("Connection established");
 
-                    clientThread[0] = new Updater(barChart, client[0], config); //TODO make this correct
+                    clientThread[0] = new Updater(barChart, client[0], config);
                     clientThread[0].start();
                 } else {
                     JOptionPane.showMessageDialog(null, "Client is not able to connect to the Server", "An Error occurred", JOptionPane.ERROR_MESSAGE);
