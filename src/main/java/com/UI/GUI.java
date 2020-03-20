@@ -156,29 +156,31 @@ public class GUI extends JFrame {
         });
 
         JMenuItem cancel = new JMenuItem("cancel Connection");
-        cancel.addActionListener((
-                ActionEvent e) ->
-
+        cancel.addActionListener((ActionEvent e) ->
         {
-            client[0].closeConnection();
+            try {
+                client[0].closeConnection();
 
-            clientThread[0].stop();
-            setContentPane(new JPanel());
-            setLayout(new GridLayout());
-            add(connectButton);
-            repaint();
-            revalidate();
-            pack();
+                clientThread[0].stop();
+
+                JPanel panel = new JPanel();
+                panel.setLayout(new GridLayout());
+                panel.add(connectButton);
+
+                setContentPane(panel);
+
+                revalidate();
+                repaint();
+                pack();
+            } catch (NullPointerException e3) {
+            }
         });
 
         JMenuItem reload = new JMenuItem("reload");
-        reload.addActionListener((
-                ActionEvent e) ->
-
+        reload.addActionListener((ActionEvent e) ->
         { // FINISHED I GUESS
             int[] selectedChannels = getSelectedChannels(channelItems, config);
             if (selectedChannels.length != 0) {
-                client[0].reload = true;//FIXME possible bug
                 try {
                     Thread.sleep(10); // not clean solution
                 } catch (InterruptedException ex) {
@@ -200,11 +202,6 @@ public class GUI extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "No valid data source", "An Error occurred", JOptionPane.ERROR_MESSAGE);
                 }
-
-                revalidate();
-                repaint();
-                pack();
-                client[0].reload = false;
             } else {
                 JOptionPane.showMessageDialog(null, "You have to select al least one channel", "An Error occurred", JOptionPane.ERROR_MESSAGE);
             }

@@ -75,8 +75,6 @@ public class AudioClient implements Client {
                     if (!correctNumberOfPackages) {
                         JOptionPane.showMessageDialog(null, "Server sent´s less channel packages than you have\n Fix the config file otherwise the shown data will be incorrect!!!", "An Error occurred", JOptionPane.WARNING_MESSAGE);
                     }
-                    while (reload) {
-                    }
 
                     for (int x = 0; x < updateDataSet.length; x++) {
                         updateDataSet[x] = channels[selectedChannels[x]].channelSpectrum;
