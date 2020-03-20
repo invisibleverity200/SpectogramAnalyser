@@ -12,7 +12,7 @@ import java.net.Socket;
 
 public class AudioClient implements Client {
     public AudChannel[] channels;
-    public boolean reload = false;
+    public boolean freeze = false;
     private Socket s;
     private DataOutputStream outputStream;
     private DataInputStream dataInputStream;
@@ -75,15 +75,16 @@ public class AudioClient implements Client {
                     if (!correctNumberOfPackages) {
                         JOptionPane.showMessageDialog(null, "Server sent´s less channel packages than you have\n Fix the config file otherwise the shown data will be incorrect!!!", "An Error occurred", JOptionPane.WARNING_MESSAGE);
                     }
+                    if (!freeze) {
+                        for (int x = 0; x < updateDataSet.length; x++) {
+                            try {
+                                updateDataSet[x] = channels[selectedChannels[x]].channelSpectrum;
+                            } catch (IndexOutOfBoundsException e1) {
 
-                    for (int x = 0; x < updateDataSet.length; x++) {
-                        try {
-                            updateDataSet[x] = channels[selectedChannels[x]].channelSpectrum;
-                        } catch (IndexOutOfBoundsException e1) {
-
+                            }
                         }
+                        chart.update(updateDataSet, (config.endFrequency - config.startFrequency) / config.blockSize, config.startFrequency, config);
                     }
-                    chart.update(updateDataSet, (config.endFrequency - config.startFrequency) / config.blockSize, config.startFrequency, config);
                 }
 
                 if ((System.currentTimeMillis() - temp) > 200) {

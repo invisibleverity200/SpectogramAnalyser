@@ -130,8 +130,10 @@ public class GUI extends JFrame {
         {
             if (stopContinueOption.getText().equals("freeze Connection")) {
                 stopContinueOption.setText("continue Connection");
+                client[0].freeze = true;
             } else {
                 stopContinueOption.setText("freeze Connection");
+                client[0].freeze = false;
             }
         });
 
