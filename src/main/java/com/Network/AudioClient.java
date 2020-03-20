@@ -77,7 +77,11 @@ public class AudioClient implements Client {
                     }
 
                     for (int x = 0; x < updateDataSet.length; x++) {
-                        updateDataSet[x] = channels[selectedChannels[x]].channelSpectrum;
+                        try {
+                            updateDataSet[x] = channels[selectedChannels[x]].channelSpectrum;
+                        } catch (IndexOutOfBoundsException e1) {
+
+                        }
                     }
                     chart.update(updateDataSet, (config.endFrequency - config.startFrequency) / config.blockSize, config.startFrequency, config);
                 }

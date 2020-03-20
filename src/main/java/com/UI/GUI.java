@@ -109,14 +109,25 @@ public class GUI extends JFrame {
 
         JCheckBoxMenuItem[] channelItems = new JCheckBoxMenuItem[config.channelNames.size()]; //for every channel name in the config file will be created a checkbox in the Menu bar
         int i = 0;
+        int z = 0;
         for (String channelName : config.channelNames) {
             channelItems[i] = new JCheckBoxMenuItem(channelName);
+            if (i == config.selectedItems.get(z)) {
+                channelItems[i].setSelected(true);
+                if (!(config.selectedItems.size() - 1 == z)) {
+                    z++;
+                }
+            }
+
             channelMenu.add(channelItems[i]);
             i++;
         }
 
         JMenuItem stopContinueOption = new JMenuItem("freeze Connection");
-        stopContinueOption.addActionListener((ActionEvent e) -> {
+        stopContinueOption.addActionListener((
+                ActionEvent e) ->
+
+        {
             if (stopContinueOption.getText().equals("freeze Connection")) {
                 stopContinueOption.setText("continue Connection");
             } else {
@@ -124,7 +135,10 @@ public class GUI extends JFrame {
             }
         });
 
-        connectButton.addActionListener((ActionEvent e) -> {
+        connectButton.addActionListener((
+                ActionEvent e) ->
+
+        {
             client[0] = new AudioClient();
             int[] selectedChannels = getSelectedChannels(channelItems, config);
             if (selectedChannels.length != 0) {
@@ -156,7 +170,9 @@ public class GUI extends JFrame {
         });
 
         JMenuItem cancel = new JMenuItem("cancel Connection");
-        cancel.addActionListener((ActionEvent e) ->
+        cancel.addActionListener((
+                ActionEvent e) ->
+
         {
             try {
                 client[0].closeConnection();
@@ -177,34 +193,45 @@ public class GUI extends JFrame {
         });
 
         JMenuItem reload = new JMenuItem("reload");
-        reload.addActionListener((ActionEvent e) ->
+        reload.addActionListener((
+                ActionEvent e) ->
+
         { // FINISHED I GUESS
             int[] selectedChannels = getSelectedChannels(channelItems, config);
+
             if (selectedChannels.length != 0) {
                 try {
-                    Thread.sleep(10); // not clean solution
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-                XYSeries[] initArray = new XYSeries[selectedChannels.length];
-                client[0].selectedChannels = selectedChannels;
+                    config.selectedItems = new ArrayList<>();
+                    for (int index = 0; index < selectedChannels.length; index++) {
+                        config.selectedItems.add(selectedChannels[index]);
+                    }
+                    config.writeSelectedChannelsFile();
 
-                for (int x = 0; x < initArray.length; x++) {
-                    initArray[x] = client[0].channels[selectedChannels[x]].getXYSeries(config);
-                }
+                    XYSeries[] initArray = new XYSeries[selectedChannels.length];
+                    client[0].selectedChannels = selectedChannels;
 
-                ChartPanel chartPanel = barChart.init(initArray);
-                if (chartPanel != null) {
-                    setContentPane(chartPanel);
-                    revalidate();
-                    repaint();
-                    pack();
-                } else {
-                    JOptionPane.showMessageDialog(null, "No valid data source", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+                    for (int x = 0; x < initArray.length; x++) {
+
+                        initArray[x] = client[0].channels[selectedChannels[x]].getXYSeries(config);
+                    }
+
+
+                    ChartPanel chartPanel = barChart.init(initArray);
+                    if (chartPanel != null) {
+                        setContentPane(chartPanel);
+                        revalidate();
+                        repaint();
+                        pack();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No valid data source", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NullPointerException e10) {
+
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "You have to select al least one channel", "An Error occurred", JOptionPane.ERROR_MESSAGE);
             }
+
         });
 
         operations.add(reload);

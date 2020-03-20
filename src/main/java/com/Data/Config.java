@@ -13,6 +13,7 @@ public class Config {
     public int port = 1337;
     public String hostname = "192.168.0.1";
     public int blockSize = 512;
+    public ArrayList<Integer> selectedItems = new ArrayList<>();
 
     public Config() {
         readConfigFile();
@@ -20,10 +21,27 @@ public class Config {
 
     public void writeConfigFile() {
         try {
-            flushFile();
+            flushFile("config.json");
             OutputStream fileWriter = new FileOutputStream("config.json");
             JsonWriter jsonWriter = Json.createWriter(fileWriter);
             jsonWriter.writeObject(createJsonObject());
+            jsonWriter.close();
+        } catch (IOException e) {
+            System.out.println("\u001B[31m" + "ERROR: " + e.getMessage());
+        }
+    }
+
+    public void writeSelectedChannelsFile() {
+        try {
+            flushFile("selected.json");
+            OutputStream fileWriter = new FileOutputStream("selected.json");
+            JsonWriter jsonWriter = Json.createWriter(fileWriter);
+            JsonArrayBuilder array = Json.createArrayBuilder();
+            for (int index = 0; index < selectedItems.size(); index++) {
+                array.add(index, selectedItems.get(index));
+            }
+            JsonObject jsonObject = Json.createObjectBuilder().add("Selected Items", array).build();
+            jsonWriter.writeObject(jsonObject);
             jsonWriter.close();
         } catch (IOException e) {
             System.out.println("\u001B[31m" + "ERROR: " + e.getMessage());
@@ -42,8 +60,17 @@ public class Config {
         try {
             InputStream inputStream = new FileInputStream("config.json");
             JsonReader reader = Json.createReader(inputStream);
+            InputStream inputStreamSelectedFile = new FileInputStream("selected.json");
+            JsonReader reader1 = Json.createReader(inputStreamSelectedFile);
+
+            JsonObject selectedChannels = reader1.readObject();
 
             JsonObject config = reader.readObject();
+            JsonArray selectedChannelsArray = selectedChannels.getJsonArray("Selected Items");
+
+            for (JsonValue selectedChannelIndex : selectedChannelsArray) {
+               this.selectedItems.add(Integer.parseInt(selectedChannelIndex.toString()));
+            }
 
             this.startFrequency = config.getInt("StartFrequency");
             this.endFrequency = config.getInt("EndFrequency");
@@ -95,9 +122,9 @@ public class Config {
                 .build();
     }
 
-    private void flushFile() throws IOException {
+    private void flushFile(String name) throws IOException {
         FileWriter fwOb;
-        fwOb = new FileWriter("config.json", false);
+        fwOb = new FileWriter(name, false);
         PrintWriter pwOb = new PrintWriter(fwOb, false);
         pwOb.flush();
         pwOb.close();
