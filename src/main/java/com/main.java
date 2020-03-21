@@ -1,3 +1,5 @@
+package com;
+
 import com.UI.GUI;
 
 public class main {

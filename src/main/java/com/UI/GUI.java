@@ -190,7 +190,7 @@ public class GUI extends JFrame {
                 revalidate();
                 repaint();
                 pack();
-            } catch (NullPointerException e3) {
+            } catch (NullPointerException ignored) {
             }
         });
 
@@ -203,9 +203,11 @@ public class GUI extends JFrame {
 
             if (selectedChannels.length != 0) {
                 try {
+                    client[0].freeze = true;
+                    Thread.sleep(10);
                     config.selectedItems = new ArrayList<>();
-                    for (int index = 0; index < selectedChannels.length; index++) {
-                        config.selectedItems.add(selectedChannels[index]);
+                    for (int selectedChannel : selectedChannels) {
+                        config.selectedItems.add(selectedChannel);
                     }
                     config.writeSelectedChannelsFile();
 
@@ -227,7 +229,8 @@ public class GUI extends JFrame {
                     } else {
                         JOptionPane.showMessageDialog(null, "No valid data source", "An Error occurred", JOptionPane.ERROR_MESSAGE);
                     }
-                } catch (NullPointerException e10) {
+                    client[0].freeze = false;
+                } catch (NullPointerException | InterruptedException ignored) {
 
                 }
             } else {

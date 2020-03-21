@@ -69,7 +69,7 @@ public class Config {
             JsonArray selectedChannelsArray = selectedChannels.getJsonArray("Selected Items");
 
             for (JsonValue selectedChannelIndex : selectedChannelsArray) {
-               this.selectedItems.add(Integer.parseInt(selectedChannelIndex.toString()));
+                this.selectedItems.add(Integer.parseInt(selectedChannelIndex.toString()));
             }
 
             this.startFrequency = config.getInt("StartFrequency");

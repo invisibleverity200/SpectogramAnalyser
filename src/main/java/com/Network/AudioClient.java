@@ -60,7 +60,9 @@ public class AudioClient implements Client {
             while (true) {
                 if (dataInputStream.available() >= ((config.blockSize + 1) * config.channelNames.size() * Integer.BYTES)) {
                     temp = System.currentTimeMillis();
-                    channels = new AudChannel[config.channelNames.size()];
+                    if (!freeze) {
+                        channels = new AudChannel[config.channelNames.size()];
+                    }
                     for (int i = 0; i < config.channelNames.size(); i++) {
                         int channelIndex = dataInputStream.readInt();
                         if (channelIndex != i + 1) { //FIXME POSSIBLE BUG
@@ -70,7 +72,9 @@ public class AudioClient implements Client {
                         for (int y = 0; y < channelSpectrum.length; y++) {
                             channelSpectrum[y] = dataInputStream.readInt();
                         }
-                        channels[i] = new AudChannel(channelIndex, channelSpectrum);
+                        if (!freeze) {
+                            channels[i] = new AudChannel(channelIndex, channelSpectrum);
+                        }
                     }
                     if (!correctNumberOfPackages) {
                         JOptionPane.showMessageDialog(null, "Server sent´s less channel packages than you have\n Fix the config file otherwise the shown data will be incorrect!!!", "An Error occurred", JOptionPane.WARNING_MESSAGE);
@@ -79,7 +83,7 @@ public class AudioClient implements Client {
                         for (int x = 0; x < updateDataSet.length; x++) {
                             try {
                                 updateDataSet[x] = channels[selectedChannels[x]].channelSpectrum;
-                            } catch (IndexOutOfBoundsException e1) {
+                            } catch (IndexOutOfBoundsException ignored) {
 
                             }
                         }
