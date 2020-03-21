@@ -105,7 +105,7 @@ public class AudioClient implements Client {
 
                 }
 
-                if ((System.currentTimeMillis() - temp) > 20000) {
+                if ((System.currentTimeMillis() - temp) > 2000) {
                     return false;
                 }
             }

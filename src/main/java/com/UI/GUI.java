@@ -242,6 +242,7 @@ public class GUI extends JFrame {
                     for (int x = 0; x < initArray.length; x++) {
 
                         initArray[x] = client[0].channels[selectedChannels[x]].getXYSeries(config);
+                        System.out.println(initArray[x].getX(10) + "Config StepWidth;" + config.frequencyStepWidth+"Config start frequency: " + config.startFrequency);
                     }
                     client[0].reload = false;
 
