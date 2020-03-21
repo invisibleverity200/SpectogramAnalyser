@@ -83,7 +83,7 @@ public class Config {
             JsonArray channelNames = config.getJsonArray("channelNames");
 
             for (JsonValue channelName : channelNames) {
-                this.channelNames.add(channelName.toString());
+                this.channelNames.add(channelName.toString().substring(1, channelName.toString().length() - 1));
             }
             if (checkForSimilarNames()) {
                 JOptionPane.showMessageDialog(null, "You have similar Channel names please correct that and restart the program", "An Error occurred", JOptionPane.ERROR_MESSAGE);
@@ -109,6 +109,7 @@ public class Config {
         int index = 0;
         for (String channelName : this.channelNames) {
             channelNames.add(index, channelName);
+            System.out.println(channelName);
             index++;
         }
         return Json.createObjectBuilder()
