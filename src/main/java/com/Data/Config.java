@@ -109,7 +109,6 @@ public class Config {
         int index = 0;
         for (String channelName : this.channelNames) {
             channelNames.add(index, channelName);
-            System.out.println(channelName);
             index++;
         }
         return Json.createObjectBuilder()

@@ -151,7 +151,6 @@ public class GUI extends JFrame {
             channelMenu.add(channelItems[i]);
             i++;
         }
-
         JMenuItem stopContinueOption = new JMenuItem("Freeze Connection");
         stopContinueOption.addActionListener((
                 ActionEvent e) ->
@@ -257,7 +256,6 @@ public class GUI extends JFrame {
                     }
 
                 } catch (NullPointerException | InterruptedException ignored) {
-                    client[0].reload = false;
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "You have to select al least one channel", "An Error occurred", JOptionPane.ERROR_MESSAGE);
