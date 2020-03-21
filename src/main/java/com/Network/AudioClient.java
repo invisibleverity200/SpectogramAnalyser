@@ -63,8 +63,11 @@ public class AudioClient implements Client {
             boolean correctNumberOfPackages = true;
             int[][] updateDataSet = new int[selectedChannels.length][config.blockSize];
             long temp = System.currentTimeMillis();
+
             outputStream.write(1);
+
             while (true) {
+
                 if (dataInputStream.available() >= ((config.blockSize + 1) * config.channelNames.size() * Integer.BYTES)) {
                     temp = System.currentTimeMillis();
                     if (!freeze) {
@@ -72,7 +75,7 @@ public class AudioClient implements Client {
                     }
                     for (int i = 0; i < config.channelNames.size(); i++) {
                         int channelIndex = dataInputStream.readInt();
-                        if (channelIndex != i + 1) { //FIXME POSSIBLE BUG
+                        if (channelIndex != i + 1) {
                             correctNumberOfPackages = false;
                         }
                         int[] channelSpectrum = new int[config.blockSize];

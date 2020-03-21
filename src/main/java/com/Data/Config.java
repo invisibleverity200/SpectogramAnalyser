@@ -83,7 +83,6 @@ public class Config {
 
             for (JsonValue channelName : channelNames) {
                 this.channelNames.add(channelName.toString());
-                System.out.println(channelName.toString());
             }
             if (checkForSimilarNames()) {
                 JOptionPane.showMessageDialog(null, "You have similar Channel names please correct that and restart the program", "An Error occurred", JOptionPane.ERROR_MESSAGE);
