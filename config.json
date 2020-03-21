@@ -1,1 +1,1 @@
-{"StartFrequency":1000,"EndFrequency":10000,"VoltageStepWidth":"0.01","channelNames":["t","t2","t3"],"Hostname":"192.168.1.108","Port":12345,"BlockSize":512}
+{"StartFrequency":1000,"EndFrequency":10000,"VoltageStepWidth":"0.01","channelNames":["t","t2"],"Hostname":"192.168.1.108","Port":12345,"BlockSize":512}

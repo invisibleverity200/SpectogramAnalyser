@@ -123,16 +123,16 @@ public class GUI extends JFrame {
             i++;
         }
 
-        JMenuItem stopContinueOption = new JMenuItem("freeze Connection");
+        JMenuItem stopContinueOption = new JMenuItem("Freeze Connection");
         stopContinueOption.addActionListener((
                 ActionEvent e) ->
 
         {
-            if (stopContinueOption.getText().equals("freeze Connection")) {
-                stopContinueOption.setText("continue Connection");
+            if (stopContinueOption.getText().equals("Freeze Connection")) {
+                stopContinueOption.setText("Continue Connection");
                 client[0].freeze = true;
             } else {
-                stopContinueOption.setText("freeze Connection");
+                stopContinueOption.setText("Freeze Connection");
                 client[0].freeze = false;
             }
         });
@@ -171,10 +171,8 @@ public class GUI extends JFrame {
             }
         });
 
-        JMenuItem cancel = new JMenuItem("cancel Connection");
-        cancel.addActionListener((
-                ActionEvent e) ->
-
+        JMenuItem cancel = new JMenuItem("Cancel Connection");
+        cancel.addActionListener((ActionEvent e) ->
         {
             try {
                 client[0].closeConnection();
@@ -194,10 +192,8 @@ public class GUI extends JFrame {
             }
         });
 
-        JMenuItem reload = new JMenuItem("reload");
-        reload.addActionListener((
-                ActionEvent e) ->
-
+        JMenuItem reload = new JMenuItem("Reload");
+        reload.addActionListener((ActionEvent e) ->
         { // FINISHED I GUESS
             int[] selectedChannels = getSelectedChannels(channelItems, config);
 
@@ -239,9 +235,15 @@ public class GUI extends JFrame {
 
         });
 
-        operations.add(reload);
+        JMenuItem quit = new JMenuItem("Quit");
+        quit.addActionListener((ActionEvent e) -> {
+            client[0].closeConnection();
+            System.exit(1);
+        });
         operations.add(stopContinueOption);
+        operations.add(reload);
         operations.add(cancel);
+        operations.add(quit);
 
 
         setLayout(new GridLayout());

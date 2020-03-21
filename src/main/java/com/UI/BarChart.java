@@ -1,5 +1,6 @@
 package com.UI;
 
+import com.Data.AudChannel;
 import com.Data.Config;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 public class BarChart implements Charts {
     private ArrayList<XYSeries> dataSet = new ArrayList<>();
     JFreeChart chart;
+    XYSeriesCollection xySeriesCollection;
 
     public ChartPanel init(XYSeries[] dataSet) {
         for (int i = 0; i < dataSet.length; i++) {
@@ -45,11 +47,39 @@ public class BarChart implements Charts {
                 dataSet.get(i).clear();
                 for (int y = 0; y < newData[i].length; y++) {
                     dataSet.get(i).add(startFrequency + y * frequencySteps, newData[i][y] * config.voltageStepWidth);
-                   // chart.getXYPlot().setDataset();
-                    System.out.println("ItemCount: " + dataSet.get(i).getItemCount() + " Channel: " + i);
                 }
             }
         }
     }
 
+    public void update(AudChannel[] channels, Config config) {
+        ArrayList<XYSeries> xySeriesArray = new ArrayList<>(config.selectedItems.size());
+        System.out.println(channels.length);
+        for (int x = 0; x < xySeriesArray.size(); x++) {
+            XYSeries xySeriesTemp = channels[config.selectedItems.get(x)].getXYSeries(config);
+            if (xySeriesTemp != null) {
+                xySeriesArray.set(x, channels[config.selectedItems.get(x)].getXYSeries(config));
+            }
+        }
+
+        XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
+        for (XYSeries xySeries : xySeriesArray) {
+            try {
+                if (xySeries != null) {
+                    xySeriesCollection.addSeries(xySeries);
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println("\u001B[31m" + "this error is caused because the server sent´s to many or less channels!\nERROR(2003): " + e.getMessage());
+            }
+        }
+        if (xySeriesCollection != null) {
+            this.xySeriesCollection = xySeriesCollection;
+
+        }
+    }
 }
+
+
+
+
+

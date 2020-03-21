@@ -74,12 +74,14 @@ public class AudioClient implements Client {
                     }
                     for (int i = 0; i < config.channelNames.size(); i++) {
                         int channelIndex = dataInputStream.readInt();
+                        System.out.println("ChannelIndex: " + channelIndex);
                         if (channelIndex != i + 1) {
                             correctNumberOfPackages = false;
                         }
                         int[] channelSpectrum = new int[config.blockSize];
                         for (int y = 0; y < channelSpectrum.length; y++) {
                             channelSpectrum[y] = dataInputStream.readInt();
+                            System.out.println("ChannelSpec: " + channelSpectrum[y]);
                         }
                         if (!freeze && !reload) {
                             channels[i] = new AudChannel(channelIndex, channelSpectrum);
@@ -103,7 +105,7 @@ public class AudioClient implements Client {
 
                 }
 
-                if ((System.currentTimeMillis() - temp) > 2000) {
+                if ((System.currentTimeMillis() - temp) > 20000) {
                     return false;
                 }
             }
