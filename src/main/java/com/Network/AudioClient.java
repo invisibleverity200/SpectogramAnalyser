@@ -1,3 +1,10 @@
+/**
+ * AudioClient
+ * <p>
+ * Version: 1.0
+ * <p>
+ * Author: Tomek Steenbock
+ */
 package com.Network;
 
 import com.Data.AudChannel;
@@ -55,7 +62,7 @@ public class AudioClient implements Client {
         try {
             boolean correctNumberOfPackages = true;
             int[][] updateDataSet = new int[selectedChannels.length][config.blockSize];
-            long temp = System.currentTimeMillis() - 20;
+            long temp = System.currentTimeMillis();
             outputStream.write(1);
             while (true) {
                 if (dataInputStream.available() >= ((config.blockSize + 1) * config.channelNames.size() * Integer.BYTES)) {
@@ -77,7 +84,9 @@ public class AudioClient implements Client {
                         }
                     }
                     if (!correctNumberOfPackages) {
-                        JOptionPane.showMessageDialog(null, "Server sent´s less channel packages than you have\n Fix the config file otherwise the shown data will be incorrect!!!", "An Error occurred", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(null,
+                                "Server sent´s less channel packages than you have\n Fix the config file otherwise the shown data will be incorrect!!!", "An Error occurred",
+                                JOptionPane.WARNING_MESSAGE);
                     }
                     if (!freeze) {
                         for (int x = 0; x < updateDataSet.length; x++) {
@@ -89,6 +98,7 @@ public class AudioClient implements Client {
                         }
                         chart.update(updateDataSet, (config.endFrequency - config.startFrequency) / config.blockSize, config.startFrequency, config);
                     }
+
                 }
 
                 if ((System.currentTimeMillis() - temp) > 200) {
@@ -96,7 +106,9 @@ public class AudioClient implements Client {
                 }
             }
         } catch (IOException e) {
+            System.out.println("ERROR: " + e.getMessage());
             return false;
+
         }
     }
 

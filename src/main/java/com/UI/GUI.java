@@ -218,7 +218,7 @@ public class GUI extends JFrame {
 
                         initArray[x] = client[0].channels[selectedChannels[x]].getXYSeries(config);
                     }
-
+                    client[0].freeze = false;
 
                     ChartPanel chartPanel = barChart.init(initArray);
                     if (chartPanel != null) {
@@ -229,9 +229,9 @@ public class GUI extends JFrame {
                     } else {
                         JOptionPane.showMessageDialog(null, "No valid data source", "An Error occurred", JOptionPane.ERROR_MESSAGE);
                     }
-                    client[0].freeze = false;
-                } catch (NullPointerException | InterruptedException ignored) {
 
+                } catch (NullPointerException | InterruptedException ignored) {
+                    client[0].freeze = false;
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "You have to select al least one channel", "An Error occurred", JOptionPane.ERROR_MESSAGE);
