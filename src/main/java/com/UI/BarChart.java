@@ -41,7 +41,7 @@ public class BarChart implements Charts {
         return null;
     }
 
-    public void update(int[][] newData, int frequencySteps, int startFrequency, Config config) {
+    public void update(int[][] newData, double frequencySteps, int startFrequency, Config config) {
         for (int i = 0; i < newData.length; i++) {
             if (newData[i] != null && i < dataSet.size()) {
                 dataSet.get(i).clear();

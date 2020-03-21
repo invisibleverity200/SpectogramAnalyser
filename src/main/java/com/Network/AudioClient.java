@@ -100,7 +100,7 @@ public class AudioClient implements Client {
 
                             }
                         }
-                        chart.update(updateDataSet, (config.endFrequency - config.startFrequency) / config.blockSize, config.startFrequency, config);
+                        chart.update(updateDataSet, config.frequencyStepWidth, config.startFrequency, config);
                     }
 
                 }

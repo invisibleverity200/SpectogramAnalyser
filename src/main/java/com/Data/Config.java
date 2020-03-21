@@ -6,14 +6,15 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Config {
-    public int startFrequency = 1000;
-    public int endFrequency = 1000;
+    public ArrayList<Integer> selectedItems = new ArrayList<>();
     public ArrayList<String> channelNames = new ArrayList<>();
+    public int startFrequency = 1000;
+    public double frequencyStepWidth = 1000;
+    //public int endFrequency = 1000;
     public double voltageStepWidth = 0.01;
     public int port = 1337;
     public String hostname = "192.168.0.1";
     public int blockSize = 512;
-    public ArrayList<Integer> selectedItems = new ArrayList<>();
 
     public Config() {
         readConfigFile();
@@ -48,9 +49,9 @@ public class Config {
         }
     }
 
-    public void updateConfig(int startFrequency, int endFrequency, double voltageStepWidth, int port, String hostname) {
+    public void updateConfig(int startFrequency, double voltageStepWidth, int port, String hostname, double frequencyStepWidth) {
         this.startFrequency = startFrequency;
-        this.endFrequency = endFrequency;
+        this.frequencyStepWidth = frequencyStepWidth;
         this.voltageStepWidth = voltageStepWidth;
         this.port = port;
         this.hostname = hostname;
@@ -73,7 +74,7 @@ public class Config {
             }
 
             this.startFrequency = config.getInt("StartFrequency");
-            this.endFrequency = config.getInt("EndFrequency");
+            this.frequencyStepWidth = Double.parseDouble(config.getString("FrequencyStepWidth"));
             this.voltageStepWidth = Double.parseDouble(config.getString("VoltageStepWidth"));
             this.port = config.getInt("Port");
             this.hostname = config.getString("Hostname");
@@ -112,7 +113,7 @@ public class Config {
         }
         return Json.createObjectBuilder()
                 .add("StartFrequency", startFrequency)
-                .add("EndFrequency", endFrequency)
+                .add("FrequencyStepWidth", String.valueOf(frequencyStepWidth))
                 .add("VoltageStepWidth", String.valueOf(voltageStepWidth))
                 .add("channelNames", channelNames)
                 .add("Hostname", hostname)

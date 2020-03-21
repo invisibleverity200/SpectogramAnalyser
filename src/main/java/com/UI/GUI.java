@@ -34,73 +34,102 @@ public class GUI extends JFrame {
             JDialog settingDialog = new JDialog();
             JPanel panel = new JPanel();
 
-            JTextField startEndFrequencyField = new JTextField(config.startFrequency + "-" + config.endFrequency);
-            JTextField VoltageStepWidthField = new JTextField(String.valueOf(config.voltageStepWidth));
+            JTextField startFrequencyField = new JTextField(String.valueOf(config.startFrequency));
+            JTextField voltageStepWidthField = new JTextField(String.valueOf(config.voltageStepWidth));
             JTextField ipAndPortField = new JTextField(config.hostname + ":" + config.port);
+            JTextField frequencyStepWidthField = new JTextField(String.valueOf(config.frequencyStepWidth));
+
+            JLabel startFrequencyLabel = new JLabel("Start frequency: ");
+            JLabel voltageStepWidthLabel = new JLabel("Voltage step width: ");
+            JLabel ipAndPortLabel = new JLabel("IP:Port: ");
+            JLabel frequencyStepWidthLabel = new JLabel("Frequency step width: ");
 
             JButton applyButton = new JButton("Apply");
             JButton saveButton = new JButton("Save");
 
             applyButton.addActionListener(e1 -> {
-                try {
-                    String[] startEndFrequency = startEndFrequencyField.getText().split("-");
-                    double voltageStepWidth = Double.parseDouble(VoltageStepWidthField.getText());
-                    String[] hostnamePort = ipAndPortField.getText().split(":");
-                    //192.168.1.1
-                    if (startEndFrequency.length == 2 && hostnamePort.length == 2 && hostnamePort[0].split("\\.").length == 4) {
-                        config.updateConfig(Integer.parseInt(startEndFrequency[0]), Integer.parseInt(startEndFrequency[1]), voltageStepWidth, Integer.parseInt(hostnamePort[1]), hostnamePort[0]);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Not allowed Structure", "An Error occurred", JOptionPane.ERROR_MESSAGE);
-                    }
-                } catch (NumberFormatException e2) {
-                    JOptionPane.showMessageDialog(null, "Strings are not allowed in Setting fields", "An Error occurred", JOptionPane.ERROR_MESSAGE);
-                }
+                applySettings(frequencyStepWidthField, startFrequencyField, voltageStepWidthField, ipAndPortField, config);
             });
 
             saveButton.addActionListener(e12 -> {
-                try {
-                    String[] startEndFrequency = startEndFrequencyField.getText().split("-");
-                    double voltageStepWidth = Double.parseDouble(VoltageStepWidthField.getText());
-                    String[] hostnamePort = ipAndPortField.getText().split(":");
-
-                    if (startEndFrequency.length == 2 && hostnamePort.length == 2 && hostnamePort[0].split("\\.").length == 4) {
-                        config.updateConfig(Integer.parseInt(startEndFrequency[0]), Integer.parseInt(startEndFrequency[1]), voltageStepWidth, Integer.parseInt(hostnamePort[1]), hostnamePort[0]);
-                        config.writeConfigFile();
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Not allowed Structure", "An Error occurred", JOptionPane.ERROR_MESSAGE);
-                    }
-                } catch (NumberFormatException e2) {
-                    JOptionPane.showMessageDialog(null, "Strings are not allowed in Setting fields", "An Error occurred", JOptionPane.ERROR_MESSAGE);
-                }
+                applySettings(frequencyStepWidthField, startFrequencyField, voltageStepWidthField, ipAndPortField, config);
+                config.writeConfigFile();
             });
 
             GridBagConstraints gbc = new GridBagConstraints();
-            panel.setLayout(new GridBagLayout());
+            GridBagLayout gridLayout = new GridBagLayout();
+            panel.setLayout(gridLayout);
 
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.gridx = 0;
+            gbc.insets = new Insets(0, 0, 5, 0);
+            gbc.weightx = 1;
+            gbc.weighty = 1;
+            gbc.fill = GridBagConstraints.BOTH;
+
+
+            gbc.gridx = 1;
             gbc.gridy = 0;
-            panel.add(startEndFrequencyField, gbc);
-            gbc.gridx = 0;
+            gbc.gridwidth = 2;
+            gridLayout.setConstraints(startFrequencyField, gbc);
+            panel.add(startFrequencyField, gbc);
+
+            gbc.gridwidth = 2;
+            gbc.gridx = 1;
             gbc.gridy = 1;
-            panel.add(VoltageStepWidthField, gbc);
-            gbc.gridwidth = 3;
-            gbc.gridx = 0;
-            gbc.gridy = 5;
-            panel.add(applyButton, gbc);
+            gridLayout.setConstraints(voltageStepWidthField, gbc);
+            panel.add(voltageStepWidthField, gbc);
+
             gbc.gridwidth = 3;
             gbc.gridx = 0;
             gbc.gridy = 4;
-            panel.add(saveButton, gbc);
+            gridLayout.setConstraints(applyButton, gbc);
+            panel.add(applyButton, gbc);
+
             gbc.gridwidth = 3;
             gbc.gridx = 0;
-            gbc.gridy = 3;
+            gbc.gridy = 5;
+            gridLayout.setConstraints(saveButton, gbc);
+            panel.add(saveButton, gbc);
+
+            gbc.gridwidth = 2;
+            gbc.gridx = 1;
+            gbc.gridy = 2;
+            gridLayout.setConstraints(ipAndPortField, gbc);
             panel.add(ipAndPortField, gbc);
+
+            gbc.gridwidth = 2;
+            gbc.gridx = 1;
+            gbc.gridy = 3;
+            gridLayout.setConstraints(frequencyStepWidthField, gbc);
+            panel.add(frequencyStepWidthField, gbc);
+
+            gbc.gridwidth = 1;
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gridLayout.setConstraints(startFrequencyLabel, gbc);
+            panel.add(startFrequencyLabel, gbc);
+
+            gbc.gridwidth = 1;
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            gridLayout.setConstraints(voltageStepWidthLabel, gbc);
+            panel.add(voltageStepWidthLabel, gbc);
+
+            gbc.gridwidth = 1;
+            gbc.gridx = 0;
+            gbc.gridy = 2;
+            gridLayout.setConstraints(ipAndPortLabel, gbc);
+            panel.add(ipAndPortLabel, gbc);
+
+            gbc.gridwidth = 1;
+            gbc.gridx = 0;
+            gbc.gridy = 3;
+            gridLayout.setConstraints(frequencyStepWidthLabel, gbc);
+            panel.add(frequencyStepWidthLabel, gbc);
 
             settingDialog.setContentPane(panel);
             pack();
             settingDialog.setTitle("Settings");
-            settingDialog.setSize(150, 180);
+            settingDialog.setSize(380, 180);
             settingDialog.setVisible(true);
         });
         menuItem.setMnemonic(KeyEvent.VK_B);
@@ -274,6 +303,22 @@ public class GUI extends JFrame {
             selectedChannels[i] = listOfSelectedChannels.get(i);
         }
         return selectedChannels;
+    }
+
+    private void applySettings(JTextField frequencyStepWidth, JTextField startFrequencyField, JTextField VoltageStepWidthField, JTextField ipAndPortField, Config config) {
+        try {
+            String startFrequency = startFrequencyField.getText();
+            double voltageStepWidth = Double.parseDouble(VoltageStepWidthField.getText());
+            String[] hostnamePort = ipAndPortField.getText().split(":");
+            //192.168.1.1
+            if (hostnamePort.length == 2 && hostnamePort[0].split("\\.").length == 4) {
+                config.updateConfig(Integer.parseInt(startFrequency), voltageStepWidth, Integer.parseInt(hostnamePort[1]), hostnamePort[0], Double.parseDouble(frequencyStepWidth.getText()));
+            } else {
+                JOptionPane.showMessageDialog(null, "Not allowed Structure", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException e2) {
+            JOptionPane.showMessageDialog(null, "Strings are not allowed in Setting fields", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 }

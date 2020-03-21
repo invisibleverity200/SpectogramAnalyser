@@ -7,5 +7,5 @@ import org.jfree.data.xy.XYSeries;
 public interface Charts {
     ChartPanel init(XYSeries[] dataSet);
 
-    void update(int[][] newData, int frequencySteps, int startFrequency, Config config);
+    void update(int[][] newData, double frequencySteps, int startFrequency, Config config);
 }
