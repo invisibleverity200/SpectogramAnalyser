@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 public class BarChart implements Charts {
     private ArrayList<XYSeries> dataSet = new ArrayList<>();
+    JFreeChart chart;
 
     public ChartPanel init(XYSeries[] dataSet) {
         for (int i = 0; i < dataSet.length; i++) {
@@ -44,6 +45,8 @@ public class BarChart implements Charts {
                 dataSet.get(i).clear();
                 for (int y = 0; y < newData[i].length; y++) {
                     dataSet.get(i).add(startFrequency + y * frequencySteps, newData[i][y] * config.voltageStepWidth);
+                   // chart.getXYPlot().setDataset();
+                    System.out.println("ItemCount: " + dataSet.get(i).getItemCount() + " Channel: " + i);
                 }
             }
         }

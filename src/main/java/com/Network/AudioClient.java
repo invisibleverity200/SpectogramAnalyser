@@ -20,6 +20,7 @@ import java.net.Socket;
 public class AudioClient implements Client {
     public AudChannel[] channels;
     public boolean freeze = false;
+    public boolean reload = false;
     private Socket s;
     private DataOutputStream outputStream;
     private DataInputStream dataInputStream;
@@ -61,16 +62,14 @@ public class AudioClient implements Client {
     public boolean startReceiving(Config config, BarChart chart) {
         try {
             boolean correctNumberOfPackages = true;
-            int[][] updateDataSet = new int[selectedChannels.length][config.blockSize];
             long temp = System.currentTimeMillis();
-
             outputStream.write(1);
 
             while (true) {
-
+                int[][] updateDataSet = new int[selectedChannels.length][config.blockSize];
                 if (dataInputStream.available() >= ((config.blockSize + 1) * config.channelNames.size() * Integer.BYTES)) {
                     temp = System.currentTimeMillis();
-                    if (!freeze) {
+                    if (!freeze && !reload) {
                         channels = new AudChannel[config.channelNames.size()];
                     }
                     for (int i = 0; i < config.channelNames.size(); i++) {
@@ -82,7 +81,7 @@ public class AudioClient implements Client {
                         for (int y = 0; y < channelSpectrum.length; y++) {
                             channelSpectrum[y] = dataInputStream.readInt();
                         }
-                        if (!freeze) {
+                        if (!freeze && !reload) {
                             channels[i] = new AudChannel(channelIndex, channelSpectrum);
                         }
                     }
@@ -91,7 +90,7 @@ public class AudioClient implements Client {
                                 "Server sent´s less channel packages than you have\n Fix the config file otherwise the shown data will be incorrect!!!", "An Error occurred",
                                 JOptionPane.WARNING_MESSAGE);
                     }
-                    if (!freeze) {
+                    if (!freeze && !reload) {
                         for (int x = 0; x < updateDataSet.length; x++) {
                             try {
                                 updateDataSet[x] = channels[selectedChannels[x]].channelSpectrum;
@@ -104,7 +103,7 @@ public class AudioClient implements Client {
 
                 }
 
-                if ((System.currentTimeMillis() - temp) > 200) {
+                if ((System.currentTimeMillis() - temp) > 2000) {
                     return false;
                 }
             }

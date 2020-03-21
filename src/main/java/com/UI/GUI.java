@@ -203,7 +203,7 @@ public class GUI extends JFrame {
 
             if (selectedChannels.length != 0) {
                 try {
-                    client[0].freeze = true;
+                    client[0].reload = true;
                     Thread.sleep(10);
                     config.selectedItems = new ArrayList<>();
                     for (int selectedChannel : selectedChannels) {
@@ -218,7 +218,7 @@ public class GUI extends JFrame {
 
                         initArray[x] = client[0].channels[selectedChannels[x]].getXYSeries(config);
                     }
-                    client[0].freeze = false;
+                    client[0].reload = false;
 
                     ChartPanel chartPanel = barChart.init(initArray);
                     if (chartPanel != null) {
@@ -231,7 +231,7 @@ public class GUI extends JFrame {
                     }
 
                 } catch (NullPointerException | InterruptedException ignored) {
-                    client[0].freeze = false;
+                    client[0].reload = false;
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "You have to select al least one channel", "An Error occurred", JOptionPane.ERROR_MESSAGE);
