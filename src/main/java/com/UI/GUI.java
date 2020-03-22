@@ -16,8 +16,8 @@ public class GUI extends JFrame {
     public GUI() {
         Config config = new Config();
         BarChart barChart = new BarChart();
-        final AudioClient[] client = {null};
-        final Thread[] clientThread = {null};
+        AudioClient[] client = {null};
+        Thread[] clientThread = {null};
 
         JButton connectButton = new JButton("Connect");
 
@@ -218,13 +218,13 @@ public class GUI extends JFrame {
                 repaint();
                 pack();
             } catch (NullPointerException | IOException e12) {
-                System.out.println("ERROR" + e12.getMessage());
+                System.out.println("\u001B[31m" + "ERROR" + e12.getMessage());
             }
         });
 
         JMenuItem reload = new JMenuItem("Reload");
         reload.addActionListener((ActionEvent e) ->
-        { // FINISHED I GUESS
+        {
             int[] selectedChannels = getSelectedChannels(channelItems, config);
 
             if (selectedChannels.length != 0 && client[0] != null) {
@@ -243,7 +243,6 @@ public class GUI extends JFrame {
 
                     for (int index = 0; index < initArray.length; index++) {
                         initArray[index] = client[0].channels[selectedChannels[index]].getXYSeries(config);
-                        System.out.println(initArray[index].getX(10) + "Config StepWidth;" + config.frequencyStepWidth + "Config start frequency: " + config.startFrequency);
                     }
                     client[0].reload = false;
 
@@ -271,11 +270,12 @@ public class GUI extends JFrame {
         JMenuItem quit = new JMenuItem("Quit");
         quit.addActionListener((ActionEvent e) -> {
             try {
-                if (client[0] != null) {
+                if (client[0] != null && clientThread[0] != null) {
                     client[0].closeConnection();
+                    clientThread[0].stop();
                 }
             } catch (IOException | NullPointerException e3) {
-                System.out.println("ERROR" + e3.getMessage());
+                System.out.println("\u001B[31m" + "ERROR" + e3.getMessage());
             }
             System.exit(1);
         });
@@ -283,7 +283,6 @@ public class GUI extends JFrame {
         operations.add(reload);
         operations.add(cancel);
         operations.add(quit);
-
 
         setLayout(new GridLayout());
 

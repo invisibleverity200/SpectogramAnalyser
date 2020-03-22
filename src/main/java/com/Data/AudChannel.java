@@ -3,8 +3,9 @@ package com.Data;
 import org.jfree.data.xy.XYSeries;
 
 public class AudChannel {
-    private int channelIndex;
     public int[] channelSpectrum;
+
+    private int channelIndex;
 
     public AudChannel(int channelIndex, int[] channelSpectrum) {
         this.channelIndex = channelIndex;

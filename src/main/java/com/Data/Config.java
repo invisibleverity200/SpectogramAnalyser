@@ -36,7 +36,7 @@ public class Config {
             try {
                 close(fileWriter, jsonWriter);
             } catch (IOException e) {
-                System.out.println("ERROR: " + e.getMessage());
+                System.out.println("\u001B[31m" +"ERROR: " + e.getMessage());
             }
         }
     }
@@ -60,7 +60,7 @@ public class Config {
             try {
                 close(fileWriter, jsonWriter);
             } catch (IOException e) {
-                System.out.println("ERROR: " + e.getMessage());
+                System.out.println("\u001B[31m" +"ERROR: " + e.getMessage());
             }
         }
     }
@@ -107,6 +107,7 @@ public class Config {
             }
             if (checkForSimilarNames()) {
                 JOptionPane.showMessageDialog(null, "You have similar Channel names please correct that and restart the program", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+                System.exit(1);
             }
         } catch (FileNotFoundException e) {
             System.out.println("\u001B[31m" + "ERROR: " + e.getMessage());
@@ -114,7 +115,7 @@ public class Config {
             try {
                 close(inputStream, inputStreamSelectedFile, reader, reader1);
             } catch (IOException e) {
-                System.out.println("ERROR: " + e.getMessage());
+                System.out.println("\u001B[31m" +"ERROR: " + e.getMessage());
             }
         }
     }
@@ -163,7 +164,7 @@ public class Config {
             try {
                 if (fwOb != null) fwOb.close();
             } catch (IOException e) {
-                System.out.println("ERROR: " + e.getMessage());
+                System.out.println("\u001B[31m" +"ERROR: " + e.getMessage());
             }
         }
 

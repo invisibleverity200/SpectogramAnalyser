@@ -96,7 +96,7 @@ public class AudioClient implements Client {
 
             } while ((System.currentTimeMillis() - temp) <= 2000);
         } catch (IOException e) {
-            System.out.println("ERROR: " + e.getMessage());
+            System.out.println("\u001B[31m" + "ERROR at Line 99: " + e.getMessage());
         }
     }
 
