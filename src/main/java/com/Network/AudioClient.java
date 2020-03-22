@@ -1,10 +1,3 @@
-/**
- * AudioClient
- * <p>
- * Version: 1.0
- * <p>
- * Author: Tomek Steenbock
- */
 package com.Network;
 
 import com.Data.AudChannel;
@@ -60,7 +53,7 @@ public class AudioClient implements Client {
             long temp = System.currentTimeMillis();
             outputStream.write(1);
 
-            while (true) {
+            do {
                 int[][] updateDataSet = new int[selectedChannels.length][config.blockSize];
                 if (dataInputStream.available() >= ((config.blockSize + 1) * config.channelNames.size() * Integer.BYTES)) {
                     temp = System.currentTimeMillis();
@@ -99,10 +92,7 @@ public class AudioClient implements Client {
 
                 }
 
-                if ((System.currentTimeMillis() - temp) > 2000) {
-                    break;
-                }
-            }
+            } while ((System.currentTimeMillis() - temp) <= 2000);
         } catch (IOException e) {
             System.out.println("ERROR: " + e.getMessage());
         }

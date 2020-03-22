@@ -48,9 +48,7 @@ public class GUI extends JFrame {
             JButton applyButton = new JButton("Apply");
             JButton saveButton = new JButton("Save");
 
-            applyButton.addActionListener(e1 -> {
-                applySettings(frequencyStepWidthField, startFrequencyField, voltageStepWidthField, ipAndPortField, config);
-            });
+            applyButton.addActionListener(e1 -> applySettings(frequencyStepWidthField, startFrequencyField, voltageStepWidthField, ipAndPortField, config));
 
             saveButton.addActionListener(e12 -> {
                 applySettings(frequencyStepWidthField, startFrequencyField, voltageStepWidthField, ipAndPortField, config);

@@ -17,6 +17,7 @@ public class Updater extends Thread {
         this.config = config;
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     @Override
     public void run() {
         while (true) {

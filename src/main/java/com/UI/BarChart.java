@@ -1,6 +1,5 @@
 package com.UI;
 
-import com.Data.AudChannel;
 import com.Data.Config;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 
 public class BarChart implements Charts {
     private ArrayList<XYSeries> dataSet = new ArrayList<>();
-    JFreeChart chart;
+    private JFreeChart chart;
 
     public ChartPanel init(XYSeries[] dataSet) {
         for (int i = 0; i < dataSet.length; i++) {
