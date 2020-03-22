@@ -4,12 +4,14 @@ import com.Data.AudChannel;
 import com.Data.Config;
 import com.UI.BarChart;
 
+import java.io.IOException;
+
 public interface Client {
 
     boolean connectTo(String hostname, int port);
 
-    boolean closeConnection();
+    void closeConnection() throws IOException, NullPointerException;
 
-    boolean startReceiving(Config config, BarChart chart);
+    void startReceiving(Config config, BarChart chart);
 }
 

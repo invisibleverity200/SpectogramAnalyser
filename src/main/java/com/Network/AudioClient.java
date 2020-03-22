@@ -19,14 +19,15 @@ import java.net.Socket;
 
 public class AudioClient implements Client {
     public AudChannel[] channels;
+    public int[] selectedChannels;
     public boolean freeze = false;
     public boolean reload = false;
+
     private Socket s;
     private DataOutputStream outputStream;
     private DataInputStream dataInputStream;
     private String hostname;
     private int port;
-    public int[] selectedChannels;
 
     @Override
     public boolean connectTo(String hostname, int port) {
@@ -46,20 +47,14 @@ public class AudioClient implements Client {
     }
 
     @Override
-    public boolean closeConnection() {
-        try {
-            outputStream.write(0);
-            s.close();
-            outputStream.close();
-            dataInputStream.close();
-        } catch (IOException | NullPointerException e) {
-            return false;
-        }
-        return true;
+    public void closeConnection() throws IOException, NullPointerException {
+        if (s != null) s.close();
+        if (outputStream != null) outputStream.close();
+        if (dataInputStream != null) dataInputStream.close();
     }
 
     @Override
-    public boolean startReceiving(Config config, BarChart chart) {
+    public void startReceiving(Config config, BarChart chart) {
         try {
             boolean correctNumberOfPackages = true;
             long temp = System.currentTimeMillis();
@@ -74,7 +69,7 @@ public class AudioClient implements Client {
                     }
                     for (int index = 0; index < config.channelNames.size(); index++) {
                         int channelIndex = dataInputStream.readInt();
-                        if (channelIndex != channelIndex + 1) {
+                        if (channelIndex != index + 1) {
                             correctNumberOfPackages = false;
                         }
                         int[] channelSpectrum = new int[config.blockSize];
@@ -105,13 +100,11 @@ public class AudioClient implements Client {
                 }
 
                 if ((System.currentTimeMillis() - temp) > 2000) {
-                    return false;
+                    break;
                 }
             }
         } catch (IOException e) {
             System.out.println("ERROR: " + e.getMessage());
-            return false;
-
         }
     }
 

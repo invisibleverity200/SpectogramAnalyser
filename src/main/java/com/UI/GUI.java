@@ -9,6 +9,7 @@ import org.jfree.data.xy.XYSeries;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class GUI extends JFrame {
@@ -215,7 +216,7 @@ public class GUI extends JFrame {
                 revalidate();
                 repaint();
                 pack();
-            } catch (NullPointerException ignored) {
+            } catch (NullPointerException | IOException ignored) {
             }
         });
 
@@ -240,7 +241,7 @@ public class GUI extends JFrame {
                     for (int index = 0; index < initArray.length; index++) {
 
                         initArray[index] = client[0].channels[selectedChannels[index]].getXYSeries(config);
-                        System.out.println(initArray[index].getX(10) + "Config StepWidth;" + config.frequencyStepWidth+"Config start frequency: " + config.startFrequency);
+                        System.out.println(initArray[index].getX(10) + "Config StepWidth;" + config.frequencyStepWidth + "Config start frequency: " + config.startFrequency);
                     }
                     client[0].reload = false;
 
@@ -264,7 +265,10 @@ public class GUI extends JFrame {
 
         JMenuItem quit = new JMenuItem("Quit");
         quit.addActionListener((ActionEvent e) -> {
-            client[0].closeConnection();
+            try {
+                client[0].closeConnection();
+            } catch (IOException | NullPointerException ignored) {
+            }
             System.exit(1);
         });
         operations.add(stopContinueOption);
