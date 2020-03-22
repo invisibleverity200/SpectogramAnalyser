@@ -226,6 +226,7 @@ public class GUI extends JFrame {
             if (selectedChannels.length != 0) {
                 try {
                     client[0].reload = true;
+                    client[0].selectedChannels = selectedChannels;
                     Thread.sleep(10);
                     config.selectedItems = new ArrayList<>();
                     for (int selectedChannel : selectedChannels) {
@@ -234,7 +235,7 @@ public class GUI extends JFrame {
                     config.writeSelectedChannelsFile();
 
                     XYSeries[] initArray = new XYSeries[selectedChannels.length];
-                    client[0].selectedChannels = selectedChannels;
+
 
                     for (int index = 0; index < initArray.length; index++) {
 
