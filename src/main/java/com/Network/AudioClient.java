@@ -41,9 +41,10 @@ public class AudioClient implements Client {
 
     @Override
     public void closeConnection() throws IOException, NullPointerException {
-        if (s != null) s.close();
-        if (outputStream != null) outputStream.close();
-        if (dataInputStream != null) dataInputStream.close();
+        if (s != null && !(s.isClosed())) s.close();
+        //  System.out.println(outputStream);
+        if (outputStream != null && (s.isClosed())) outputStream.close();
+        if (dataInputStream != null && (s.isClosed())) dataInputStream.close();
     }
 
     @Override

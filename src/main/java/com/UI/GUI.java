@@ -17,7 +17,7 @@ public class GUI extends JFrame {
         Config config = new Config();
         BarChart barChart = new BarChart();
         final AudioClient[] client = {null};
-        final Thread[] clientThread = new Thread[1];
+        final Thread[] clientThread = {null};
 
         JButton connectButton = new JButton("Connect");
 
@@ -154,10 +154,10 @@ public class GUI extends JFrame {
                 ActionEvent e) ->
 
         {
-            if (stopContinueOption.getText().equals("Freeze Connection")) {
+            if (stopContinueOption.getText().equals("Freeze Connection") && client[0] != null) {
                 stopContinueOption.setText("Continue Connection");
                 client[0].freeze = true;
-            } else {
+            } else if (stopContinueOption.getText().equals("Continue Connection") && client[0] != null) {
                 stopContinueOption.setText("Freeze Connection");
                 client[0].freeze = false;
             }
@@ -201,9 +201,12 @@ public class GUI extends JFrame {
         cancel.addActionListener((ActionEvent e) ->
         {
             try {
-                client[0].closeConnection();
-
-                clientThread[0].stop();
+                if (client[0] != null) {
+                    client[0].closeConnection();
+                }
+                if (clientThread[0] != null) {
+                    clientThread[0].stop();
+                }
 
                 JPanel panel = new JPanel();
                 panel.setLayout(new GridLayout());
@@ -214,7 +217,8 @@ public class GUI extends JFrame {
                 revalidate();
                 repaint();
                 pack();
-            } catch (NullPointerException | IOException ignored) {
+            } catch (NullPointerException | IOException e12) {
+                System.out.println("ERROR" + e12.getMessage());
             }
         });
 
@@ -223,7 +227,7 @@ public class GUI extends JFrame {
         { // FINISHED I GUESS
             int[] selectedChannels = getSelectedChannels(channelItems, config);
 
-            if (selectedChannels.length != 0) {
+            if (selectedChannels.length != 0 && client[0] != null) {
                 try {
                     client[0].reload = true;
                     client[0].selectedChannels = selectedChannels;
@@ -238,7 +242,6 @@ public class GUI extends JFrame {
 
 
                     for (int index = 0; index < initArray.length; index++) {
-
                         initArray[index] = client[0].channels[selectedChannels[index]].getXYSeries(config);
                         System.out.println(initArray[index].getX(10) + "Config StepWidth;" + config.frequencyStepWidth + "Config start frequency: " + config.startFrequency);
                     }
@@ -254,10 +257,13 @@ public class GUI extends JFrame {
                         JOptionPane.showMessageDialog(null, "No valid data source", "An Error occurred", JOptionPane.ERROR_MESSAGE);
                     }
 
-                } catch (NullPointerException | InterruptedException ignored) {
+                } catch (NullPointerException | InterruptedException e3) {
+                    System.out.println("ERROR" + e3.getMessage());
                 }
-            } else {
+            } else if (selectedChannels.length <= 0) {
                 JOptionPane.showMessageDialog(null, "You have to select al least one channel", "An Error occurred", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Please connect to a Server first", "An Error occurred", JOptionPane.ERROR_MESSAGE);
             }
 
         });
@@ -265,8 +271,11 @@ public class GUI extends JFrame {
         JMenuItem quit = new JMenuItem("Quit");
         quit.addActionListener((ActionEvent e) -> {
             try {
-                client[0].closeConnection();
-            } catch (IOException | NullPointerException ignored) {
+                if (client[0] != null) {
+                    client[0].closeConnection();
+                }
+            } catch (IOException | NullPointerException e3) {
+                System.out.println("ERROR" + e3.getMessage());
             }
             System.exit(1);
         });
