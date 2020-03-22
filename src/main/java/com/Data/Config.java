@@ -94,9 +94,9 @@ public class Config {
     }
 
     private boolean checkForSimilarNames() {
-        for (int i = 0; i < channelNames.size(); i++) {
-            for (int y = i + 1; y < channelNames.size(); y++) {
-                if (channelNames.get(i).equals(channelNames.get(y))) {
+        for (int firstChannelIndex = 0; firstChannelIndex < channelNames.size(); firstChannelIndex++) {
+            for (int secondChannelIndex = firstChannelIndex + 1; secondChannelIndex < channelNames.size(); secondChannelIndex++) {
+                if (channelNames.get(firstChannelIndex).equals(channelNames.get(secondChannelIndex))) {
                     return true;
                 }
             }

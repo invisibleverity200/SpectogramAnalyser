@@ -72,30 +72,29 @@ public class AudioClient implements Client {
                     if (!freeze && !reload) {
                         channels = new AudChannel[config.channelNames.size()];
                     }
-                    for (int i = 0; i < config.channelNames.size(); i++) {
+                    for (int index = 0; index < config.channelNames.size(); index++) {
                         int channelIndex = dataInputStream.readInt();
-                        System.out.println("ChannelIndex: " + channelIndex);
-                        if (channelIndex != i + 1) {
+                        if (channelIndex != channelIndex + 1) {
                             correctNumberOfPackages = false;
                         }
                         int[] channelSpectrum = new int[config.blockSize];
-                        for (int y = 0; y < channelSpectrum.length; y++) {
-                            channelSpectrum[y] = dataInputStream.readInt();
-                            System.out.println("ChannelSpec: " + channelSpectrum[y]);
+                        for (int spectrumIndex = 0; spectrumIndex < channelSpectrum.length; spectrumIndex++) {
+                            channelSpectrum[spectrumIndex] = dataInputStream.readInt();
                         }
                         if (!freeze && !reload) {
-                            channels[i] = new AudChannel(channelIndex, channelSpectrum);
+                            channels[index] = new AudChannel(channelIndex, channelSpectrum);
                         }
                     }
                     if (!correctNumberOfPackages) {
                         JOptionPane.showMessageDialog(null,
                                 "Server sent´s less channel packages than you have\n Fix the config file otherwise the shown data will be incorrect!!!", "An Error occurred",
                                 JOptionPane.WARNING_MESSAGE);
+                        System.exit(1);
                     }
                     if (!freeze && !reload) {
-                        for (int x = 0; x < updateDataSet.length; x++) {
+                        for (int selectedIndex = 0; selectedIndex < updateDataSet.length; selectedIndex++) {
                             try {
-                                updateDataSet[x] = channels[selectedChannels[x]].channelSpectrum;
+                                updateDataSet[selectedIndex] = channels[selectedChannels[selectedIndex]].channelSpectrum;
                             } catch (IndexOutOfBoundsException ignored) {
 
                             }

@@ -41,12 +41,12 @@ public class BarChart implements Charts {
     }
 
     public void update(int[][] newData, double frequencySteps, int startFrequency, Config config) {
-        for (int i = 0; i < newData.length; i++) {
-            if (newData[i] != null && i < dataSet.size()) {
+        for (int index = 0; index < newData.length; index++) {
+            if (newData[index] != null && index < dataSet.size()) {
                 chart.setNotify(false);
-                dataSet.get(i).clear();
-                for (int y = 0; y < newData[i].length; y++) {
-                    dataSet.get(i).addOrUpdate(startFrequency + y * frequencySteps, newData[i][y] * config.voltageStepWidth);
+                dataSet.get(index).clear();
+                for (int y = 0; y < newData[index].length; y++) {
+                    dataSet.get(index).addOrUpdate(startFrequency + y * frequencySteps, newData[index][y] * config.voltageStepWidth);
                 }
             }
         }

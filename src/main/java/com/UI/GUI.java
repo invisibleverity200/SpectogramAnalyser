@@ -65,7 +65,6 @@ public class GUI extends JFrame {
             gbc.weighty = 1;
             gbc.fill = GridBagConstraints.BOTH;
 
-
             gbc.gridx = 1;
             gbc.gridy = 0;
             gbc.gridwidth = 2;
@@ -137,19 +136,19 @@ public class GUI extends JFrame {
         settingsMenu.add(menuItem);
 
         JCheckBoxMenuItem[] channelItems = new JCheckBoxMenuItem[config.channelNames.size()]; //for every channel name in the config file will be created a checkbox in the Menu bar
-        int i = 0;
-        int z = 0;
+        int channelIndex = 0;
+        int selectedIndex = 0;
         for (String channelName : config.channelNames) {
-            channelItems[i] = new JCheckBoxMenuItem(channelName);
-            if (i == config.selectedItems.get(z)) {
-                channelItems[i].setSelected(true);
-                if (!(config.selectedItems.size() - 1 == z)) {
-                    z++;
+            channelItems[channelIndex] = new JCheckBoxMenuItem(channelName);
+            if (channelIndex == config.selectedItems.get(selectedIndex)) {
+                channelItems[channelIndex].setSelected(true);
+                if (!(config.selectedItems.size() - 1 == selectedIndex)) {
+                    selectedIndex++;
                 }
             }
 
-            channelMenu.add(channelItems[i]);
-            i++;
+            channelMenu.add(channelItems[channelIndex]);
+            channelIndex++;
         }
         JMenuItem stopContinueOption = new JMenuItem("Freeze Connection");
         stopContinueOption.addActionListener((
@@ -175,9 +174,9 @@ public class GUI extends JFrame {
                 if (client[0].connectTo(config.hostname, config.port)) {
 
                     XYSeries[] initArray = new XYSeries[selectedChannels.length];
-                    for (int x = 0; x < initArray.length; x++) {
-                        initArray[x] = new XYSeries(config.channelNames.get(selectedChannels[x]));
-                        initArray[x].add(0, 0);
+                    for (int index = 0; index < initArray.length; index++) {
+                        initArray[index] = new XYSeries(config.channelNames.get(selectedChannels[index]));
+                        initArray[index].add(0, 0);
                     }
                     ChartPanel chartPanel = barChart.init(initArray);
                     setContentPane(chartPanel);
@@ -238,10 +237,10 @@ public class GUI extends JFrame {
                     XYSeries[] initArray = new XYSeries[selectedChannels.length];
                     client[0].selectedChannels = selectedChannels;
 
-                    for (int x = 0; x < initArray.length; x++) {
+                    for (int index = 0; index < initArray.length; index++) {
 
-                        initArray[x] = client[0].channels[selectedChannels[x]].getXYSeries(config);
-                        System.out.println(initArray[x].getX(10) + "Config StepWidth;" + config.frequencyStepWidth+"Config start frequency: " + config.startFrequency);
+                        initArray[index] = client[0].channels[selectedChannels[index]].getXYSeries(config);
+                        System.out.println(initArray[index].getX(10) + "Config StepWidth;" + config.frequencyStepWidth+"Config start frequency: " + config.startFrequency);
                     }
                     client[0].reload = false;
 
