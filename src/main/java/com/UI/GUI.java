@@ -26,9 +26,13 @@ public class GUI extends JFrame {
         JMenu channelMenu = new JMenu("Channel Selection");
         JMenu operations = new JMenu("Operations");
 
+        JLabel label = new JLabel("         AVG Update time: Xms");
+        label.setForeground(Color.red);
+
         menuBar.add(settingsMenu);
         menuBar.add(channelMenu);
         menuBar.add(operations);
+        menuBar.add(label);
 
         JMenuItem menuItem = new JMenuItem("Settings", new ImageIcon("images/settings.png"));
         menuItem.addActionListener((ActionEvent e) -> {
@@ -184,6 +188,7 @@ public class GUI extends JFrame {
                     pack();
 
                     client[0].selectedChannels = selectedChannels;
+                    client[0].label = label;
 
                     System.out.println("Connection established");
 
@@ -294,7 +299,7 @@ public class GUI extends JFrame {
 
         setVisible(true);
 
-        setSize(280, 100);
+        setSize(425, 100);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 

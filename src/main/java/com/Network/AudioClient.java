@@ -15,6 +15,7 @@ public class AudioClient implements Client {
     public int[] selectedChannels;
     public boolean freeze = false;
     public boolean reload = false;
+    public JLabel label = null;
 
     private Socket s;
     private DataOutputStream outputStream;
@@ -52,12 +53,13 @@ public class AudioClient implements Client {
     public void startReceiving(Config config, BarChart chart) {
         try {
             boolean correctNumberOfPackages = true;
+            long avgUpdateTime = 0;
             long temp = System.currentTimeMillis();
             outputStream.write(1);
-
             do {
                 int[][] updateDataSet = new int[selectedChannels.length][config.blockSize];
                 if (dataInputStream.available() >= ((config.blockSize + 1) * config.channelNames.size() * Integer.BYTES)) {
+                    avgUpdateTime = System.currentTimeMillis() - temp;
                     temp = System.currentTimeMillis();
                     if (!freeze && !reload) {
                         channels = new AudChannel[config.channelNames.size()];
@@ -93,8 +95,8 @@ public class AudioClient implements Client {
                     }
 
                 }
-
-            } while ((System.currentTimeMillis() - temp) <= 2000);
+                if (avgUpdateTime != 0) label.setText("         AVG Update time: " + avgUpdateTime + "ms");
+            } while (System.currentTimeMillis() - temp <= 1300);
         } catch (IOException e) {
             System.out.println("\u001B[31m" + "ERROR at Line 99: " + e.getMessage());
         }
