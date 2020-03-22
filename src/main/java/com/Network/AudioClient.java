@@ -56,7 +56,7 @@ public class AudioClient implements Client {
             long avgUpdateTime = 0;
             long temp = System.currentTimeMillis();
             outputStream.write(1);
-            do {
+            while (true){
                 int[][] updateDataSet = new int[selectedChannels.length][config.blockSize];
                 if (dataInputStream.available() >= ((config.blockSize + 1) * config.channelNames.size() * Integer.BYTES)) {
                     avgUpdateTime = System.currentTimeMillis() - temp;
@@ -96,7 +96,11 @@ public class AudioClient implements Client {
 
                 }
                 if (avgUpdateTime != 0) label.setText("         AVG Update time: " + avgUpdateTime + "ms");
-            } while (System.currentTimeMillis() - temp <= 1300);
+                if(System.currentTimeMillis() - temp >= 1300){
+                    label.setText("         AVG Update time: Timeout");
+                    break;
+                }
+            }
         } catch (IOException e) {
             System.out.println("\u001B[31m" + "ERROR at Line 99: " + e.getMessage());
         }
