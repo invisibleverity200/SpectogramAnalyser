@@ -20,13 +20,14 @@ public class GUI extends JFrame {
         Thread[] clientThread = {null};
 
         JButton connectButton = new JButton("Connect");
-
         JMenuBar menuBar = new JMenuBar();
+
+
         JMenu settingsMenu = new JMenu("Settings");
         JMenu channelMenu = new JMenu("Channel Selection");
         JMenu operations = new JMenu("Operations");
-
         JLabel label = new JLabel("         AVG Update time: Xms");
+
         label.setForeground(Color.red);
 
         menuBar.add(settingsMenu);
@@ -153,6 +154,7 @@ public class GUI extends JFrame {
             channelMenu.add(channelItems[channelIndex]);
             channelIndex++;
         }
+
         JMenuItem stopContinueOption = new JMenuItem("Freeze Connection");
         stopContinueOption.addActionListener((
                 ActionEvent e) ->
@@ -167,10 +169,7 @@ public class GUI extends JFrame {
             }
         });
 
-        connectButton.addActionListener((
-                ActionEvent e) ->
-
-        {
+        connectButton.addActionListener((ActionEvent e) -> {
             client[0] = new AudioClient();
             int[] selectedChannels = getSelectedChannels(channelItems, config);
             if (selectedChannels.length != 0) {
@@ -203,8 +202,7 @@ public class GUI extends JFrame {
         });
 
         JMenuItem cancel = new JMenuItem("Cancel Connection");
-        cancel.addActionListener((ActionEvent e) ->
-        {
+        cancel.addActionListener((ActionEvent e) -> {
             try {
                 if (client[0] != null) {
                     client[0].closeConnection();
@@ -228,11 +226,10 @@ public class GUI extends JFrame {
         });
 
         JMenuItem reload = new JMenuItem("Reload");
-        reload.addActionListener((ActionEvent e) ->
-        {
+        reload.addActionListener((ActionEvent e) -> {
             int[] selectedChannels = getSelectedChannels(channelItems, config);
 
-            if (selectedChannels.length != 0 && client[0] != null) {
+            if ((selectedChannels.length != 0) && (client[0] != null)) {
                 try {
                     client[0].reload = true;
                     client[0].selectedChannels = selectedChannels;
@@ -275,7 +272,7 @@ public class GUI extends JFrame {
         JMenuItem quit = new JMenuItem("Quit");
         quit.addActionListener((ActionEvent e) -> {
             try {
-                if (client[0] != null && clientThread[0] != null) {
+                if ((client[0] != null) && (clientThread[0] != null)) {
                     client[0].closeConnection();
                     clientThread[0].stop();
                 }
@@ -284,6 +281,7 @@ public class GUI extends JFrame {
             }
             System.exit(1);
         });
+
         operations.add(stopContinueOption);
         operations.add(reload);
         operations.add(cancel);
@@ -296,6 +294,8 @@ public class GUI extends JFrame {
         setJMenuBar(menuBar);
 
         pack();
+
+        setTitle("SpectrumAnalyser");
 
         setVisible(true);
 
@@ -325,7 +325,7 @@ public class GUI extends JFrame {
             double voltageStepWidth = Double.parseDouble(VoltageStepWidthField.getText());
             String[] hostnamePort = ipAndPortField.getText().split(":");
             //192.168.1.1
-            if (hostnamePort.length == 2 && hostnamePort[0].split("\\.").length == 4) {
+            if ((hostnamePort.length == 2) && (hostnamePort[0].split("\\.").length == 4)) {
                 config.updateConfig(Integer.parseInt(startFrequency), voltageStepWidth, Integer.parseInt(hostnamePort[1]), hostnamePort[0], Double.parseDouble(frequencyStepWidth.getText()));
             } else {
                 JOptionPane.showMessageDialog(null, "Not allowed Structure", "An Error occurred", JOptionPane.ERROR_MESSAGE);

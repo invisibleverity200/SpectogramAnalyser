@@ -1,3 +1,11 @@
+/*
+ * AudioClient
+ *
+ * Version: 1
+ *
+ * Author: Tomek Steenbock
+ */
+
 package com.Network;
 
 import com.Data.AudChannel;
@@ -56,12 +64,13 @@ public class AudioClient implements Client {
             long avgUpdateTime = 0;
             long temp = System.currentTimeMillis();
             outputStream.write(1);
-            while (true){
+
+            while (true) {
                 int[][] updateDataSet = new int[selectedChannels.length][config.blockSize];
                 if (dataInputStream.available() >= ((config.blockSize + 1) * config.channelNames.size() * Integer.BYTES)) {
                     avgUpdateTime = System.currentTimeMillis() - temp;
                     temp = System.currentTimeMillis();
-                    if (!freeze && !reload) {
+                    if (!(freeze) && !(reload)) {
                         channels = new AudChannel[config.channelNames.size()];
                     }
                     for (int index = 0; index < config.channelNames.size(); index++) {
@@ -73,7 +82,7 @@ public class AudioClient implements Client {
                         for (int spectrumIndex = 0; spectrumIndex < channelSpectrum.length; spectrumIndex++) {
                             channelSpectrum[spectrumIndex] = dataInputStream.readInt();
                         }
-                        if (!freeze && !reload) {
+                        if (!(freeze) && !(reload)) {
                             channels[index] = new AudChannel(channelIndex, channelSpectrum);
                         }
                     }
@@ -83,7 +92,7 @@ public class AudioClient implements Client {
                                 JOptionPane.WARNING_MESSAGE);
                         System.exit(1);
                     }
-                    if (!freeze && !reload) {
+                    if (!(freeze) && !(reload)) {
                         for (int selectedIndex = 0; selectedIndex < updateDataSet.length; selectedIndex++) {
                             try {
                                 updateDataSet[selectedIndex] = channels[selectedChannels[selectedIndex]].channelSpectrum;
@@ -96,7 +105,7 @@ public class AudioClient implements Client {
 
                 }
                 if (avgUpdateTime != 0) label.setText("         AVG Update time: " + avgUpdateTime + "ms");
-                if(System.currentTimeMillis() - temp >= 1300){
+                if (System.currentTimeMillis() - temp >= 1300) {
                     label.setText("         AVG Update time: Timeout");
                     break;
                 }
