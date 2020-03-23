@@ -8,13 +8,12 @@ import java.util.ArrayList;
 public class Config {
     public ArrayList<Integer> selectedItems = new ArrayList<>();
     public ArrayList<String> channelNames = new ArrayList<>();
-    public int startFrequency = 1000;
+    public String hostname = "192.168.0.1";
     public double frequencyStepWidth = 1000;
     public double voltageStepWidth = 0.01;
+    public int startFrequency = 1000;
     public int port = 1337;
-    public String hostname = "192.168.0.1";
     public int blockSize = 512;
-
 
     public Config() {
         readConfigFile();

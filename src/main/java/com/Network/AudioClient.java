@@ -19,11 +19,11 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class AudioClient implements Client {
+    public JLabel label = null;
     public AudChannel[] channels;
     public int[] selectedChannels;
     public boolean freeze = false;
     public boolean reload = false;
-    public JLabel label = null;
 
     private Socket s;
     private DataOutputStream outputStream;
