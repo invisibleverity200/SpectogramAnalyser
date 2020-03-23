@@ -13,10 +13,10 @@ public class AudChannel {
     }
 
     public XYSeries getXYSeries(Config config) {
-        XYSeries xySeries = new XYSeries(config.channelNames.get(channelIndex - 1));
+        XYSeries xySeries = new XYSeries(config.getChannelNames().get(channelIndex - 1));
 
         for (int spectrumIndex = 0; spectrumIndex < channelSpectrum.length; spectrumIndex++) {
-            xySeries.add(config.startFrequency + config.frequencyStepWidth * spectrumIndex, channelSpectrum[spectrumIndex] * config.voltageStepWidth);
+            xySeries.add(config.getStartFrequency() + config.getFrequencyStepWidth() * spectrumIndex, channelSpectrum[spectrumIndex] * config.getVoltageStepWidth());
         }
         return xySeries;
     }

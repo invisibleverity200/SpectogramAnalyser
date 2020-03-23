@@ -26,7 +26,7 @@ public class GUI extends JFrame {
         JMenu settingsMenu = new JMenu("Settings");
         JMenu channelMenu = new JMenu("Channel Selection");
         JMenu operations = new JMenu("Operations");
-        JLabel label = new JLabel("         AVG Update time: Xms");
+        JLabel label = new JLabel("         AVG Update time: closed");
 
         label.setForeground(Color.red);
 
@@ -40,10 +40,10 @@ public class GUI extends JFrame {
             JDialog settingDialog = new JDialog();
             JPanel panel = new JPanel();
 
-            JTextField startFrequencyField = new JTextField(String.valueOf(config.startFrequency));
-            JTextField voltageStepWidthField = new JTextField(String.valueOf(config.voltageStepWidth));
-            JTextField ipAndPortField = new JTextField(config.hostname + ":" + config.port);
-            JTextField frequencyStepWidthField = new JTextField(String.valueOf(config.frequencyStepWidth));
+            JTextField startFrequencyField = new JTextField(String.valueOf(config.getStartFrequency()));
+            JTextField voltageStepWidthField = new JTextField(String.valueOf(config.getVoltageStepWidth()));
+            JTextField ipAndPortField = new JTextField(config.getHostname() + ":" + config.getPort());
+            JTextField frequencyStepWidthField = new JTextField(String.valueOf(config.getFrequencyStepWidth()));
 
             JLabel startFrequencyLabel = new JLabel("Start frequency: ");
             JLabel voltageStepWidthLabel = new JLabel("Voltage step width: ");
@@ -139,14 +139,14 @@ public class GUI extends JFrame {
 
         settingsMenu.add(menuItem);
 
-        JCheckBoxMenuItem[] channelItems = new JCheckBoxMenuItem[config.channelNames.size()]; //for every channel name in the config file will be created a checkbox in the Menu bar
+        JCheckBoxMenuItem[] channelItems = new JCheckBoxMenuItem[config.getChannelNames().size()]; //for every channel name in the config file will be created a checkbox in the Menu bar
         int channelIndex = 0;
         int selectedIndex = 0;
-        for (String channelName : config.channelNames) {
+        for (String channelName : config.getChannelNames()) {
             channelItems[channelIndex] = new JCheckBoxMenuItem(channelName);
-            if (channelIndex == config.selectedItems.get(selectedIndex)) {
+            if (channelIndex == config.getSelectedItems().get(selectedIndex)) {
                 channelItems[channelIndex].setSelected(true);
-                if (!(config.selectedItems.size() - 1 == selectedIndex)) {
+                if (!(config.getSelectedItems().size() - 1 == selectedIndex)) {
                     selectedIndex++;
                 }
             }
@@ -173,11 +173,11 @@ public class GUI extends JFrame {
             client[0] = new AudioClient();
             int[] selectedChannels = getSelectedChannels(channelItems, config);
             if (selectedChannels.length != 0) {
-                if (client[0].connectTo(config.hostname, config.port)) {
+                if (client[0].connectTo(config.getHostname(), config.getPort())) {
 
                     XYSeries[] initArray = new XYSeries[selectedChannels.length];
                     for (int index = 0; index < initArray.length; index++) {
-                        initArray[index] = new XYSeries(config.channelNames.get(selectedChannels[index]));
+                        initArray[index] = new XYSeries(config.getChannelNames().get(selectedChannels[index]));
                         initArray[index].add(0, 0);
                     }
                     ChartPanel chartPanel = barChart.init(initArray);
@@ -214,6 +214,7 @@ public class GUI extends JFrame {
                 JPanel panel = new JPanel();
                 panel.setLayout(new GridLayout());
                 panel.add(connectButton);
+                label.setText("         AVG Update time: closed");
 
                 setContentPane(panel);
 
@@ -234,9 +235,9 @@ public class GUI extends JFrame {
                     client[0].reload = true;
                     client[0].selectedChannels = selectedChannels;
                     Thread.sleep(10);
-                    config.selectedItems = new ArrayList<>();
+                    config.setSelectedItems(new ArrayList<>());
                     for (int selectedChannel : selectedChannels) {
-                        config.selectedItems.add(selectedChannel);
+                        config.getSelectedItems().add(selectedChannel);
                     }
                     config.writeSelectedChannelsFile();
 
@@ -299,7 +300,7 @@ public class GUI extends JFrame {
 
         setVisible(true);
 
-        setSize(425, 100);
+        setSize(440, 100);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -307,7 +308,7 @@ public class GUI extends JFrame {
 
     private int[] getSelectedChannels(JCheckBoxMenuItem[] channelItems, Config config) {
         ArrayList<Integer> listOfSelectedChannels = new ArrayList<>();
-        for (int y = 0; y < config.channelNames.size(); y++) {
+        for (int y = 0; y < config.getChannelNames().size(); y++) {
             if (channelItems[y].isSelected()) {
                 listOfSelectedChannels.add(y);
             }

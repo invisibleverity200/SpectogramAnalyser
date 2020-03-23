@@ -66,19 +66,19 @@ public class AudioClient implements Client {
             outputStream.write(1);
 
             while (true) {
-                int[][] updateDataSet = new int[selectedChannels.length][config.blockSize];
-                if (dataInputStream.available() >= ((config.blockSize + 1) * config.channelNames.size() * Integer.BYTES)) {
+                int[][] updateDataSet = new int[selectedChannels.length][config.getBlockSize()];
+                if (dataInputStream.available() >= ((config.getBlockSize() + 1) * config.getChannelNames().size() * Integer.BYTES)) {
                     avgUpdateTime = System.currentTimeMillis() - temp;
                     temp = System.currentTimeMillis();
                     if (!(freeze) && !(reload)) {
-                        channels = new AudChannel[config.channelNames.size()];
+                        channels = new AudChannel[config.getChannelNames().size()];
                     }
-                    for (int index = 0; index < config.channelNames.size(); index++) {
+                    for (int index = 0; index < config.getChannelNames().size(); index++) {
                         int channelIndex = dataInputStream.readInt();
                         if (channelIndex != index + 1) {
                             correctNumberOfPackages = false;
                         }
-                        int[] channelSpectrum = new int[config.blockSize];
+                        int[] channelSpectrum = new int[config.getBlockSize()];
                         for (int spectrumIndex = 0; spectrumIndex < channelSpectrum.length; spectrumIndex++) {
                             channelSpectrum[spectrumIndex] = dataInputStream.readInt();
                         }
@@ -100,7 +100,7 @@ public class AudioClient implements Client {
 
                             }
                         }
-                        chart.update(updateDataSet, config.frequencyStepWidth, config.startFrequency, config);
+                        chart.update(updateDataSet, config.getFrequencyStepWidth(), config.getStartFrequency(), config);
                     }
 
                 }

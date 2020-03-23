@@ -45,7 +45,7 @@ public class BarChart implements Charts {
                 chart.setNotify(false);
                 dataSet.get(index).clear();
                 for (int y = 0; y < newData[index].length; y++) {
-                    dataSet.get(index).addOrUpdate(startFrequency + y * frequencySteps, newData[index][y] * config.voltageStepWidth);
+                    dataSet.get(index).addOrUpdate(startFrequency + y * frequencySteps, newData[index][y] * config.getVoltageStepWidth());
                 }
             }
         }

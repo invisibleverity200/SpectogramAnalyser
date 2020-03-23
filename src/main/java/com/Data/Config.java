@@ -6,14 +6,14 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Config {
-    public ArrayList<Integer> selectedItems = new ArrayList<>();
-    public ArrayList<String> channelNames = new ArrayList<>();
-    public String hostname = "192.168.0.1";
-    public double frequencyStepWidth = 1000;
-    public double voltageStepWidth = 0.01;
-    public int startFrequency = 1000;
-    public int port = 1337;
-    public int blockSize = 512;
+    private ArrayList<Integer> selectedItems = new ArrayList<>();
+    private ArrayList<String> channelNames = new ArrayList<>();
+    private String hostname = "192.168.0.1";
+    private double frequencyStepWidth = 1000;
+    private double voltageStepWidth = 0.01;
+    private int startFrequency = 1000;
+    private int port = 1337;
+    private int blockSize = 512;
 
     public Config() {
         readConfigFile();
@@ -35,7 +35,7 @@ public class Config {
             try {
                 close(fileWriter, jsonWriter);
             } catch (IOException e) {
-                System.out.println("\u001B[31m" +"ERROR: " + e.getMessage());
+                System.out.println("\u001B[31m" + "ERROR: " + e.getMessage());
             }
         }
     }
@@ -59,17 +59,9 @@ public class Config {
             try {
                 close(fileWriter, jsonWriter);
             } catch (IOException e) {
-                System.out.println("\u001B[31m" +"ERROR: " + e.getMessage());
+                System.out.println("\u001B[31m" + "ERROR: " + e.getMessage());
             }
         }
-    }
-
-    public void updateConfig(int startFrequency, double voltageStepWidth, int port, String hostname, double frequencyStepWidth) {
-        this.startFrequency = startFrequency;
-        this.frequencyStepWidth = frequencyStepWidth;
-        this.voltageStepWidth = voltageStepWidth;
-        this.port = port;
-        this.hostname = hostname;
     }
 
     private void readConfigFile() {
@@ -114,20 +106,17 @@ public class Config {
             try {
                 close(inputStream, inputStreamSelectedFile, reader, reader1);
             } catch (IOException e) {
-                System.out.println("\u001B[31m" +"ERROR: " + e.getMessage());
+                System.out.println("\u001B[31m" + "ERROR: " + e.getMessage());
             }
         }
     }
 
-    private boolean checkForSimilarNames() {
-        for (int firstChannelIndex = 0; firstChannelIndex < channelNames.size(); firstChannelIndex++) {
-            for (int secondChannelIndex = firstChannelIndex + 1; secondChannelIndex < channelNames.size(); secondChannelIndex++) {
-                if (channelNames.get(firstChannelIndex).equals(channelNames.get(secondChannelIndex))) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    public void updateConfig(int startFrequency, double voltageStepWidth, int port, String hostname, double frequencyStepWidth) {
+        this.startFrequency = startFrequency;
+        this.frequencyStepWidth = frequencyStepWidth;
+        this.voltageStepWidth = voltageStepWidth;
+        this.port = port;
+        this.hostname = hostname;
     }
 
     private JsonObject createJsonObject() {
@@ -148,6 +137,17 @@ public class Config {
                 .build();
     }
 
+    private boolean checkForSimilarNames() {
+        for (int firstChannelIndex = 0; firstChannelIndex < channelNames.size(); firstChannelIndex++) {
+            for (int secondChannelIndex = firstChannelIndex + 1; secondChannelIndex < channelNames.size(); secondChannelIndex++) {
+                if (channelNames.get(firstChannelIndex).equals(channelNames.get(secondChannelIndex))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private void flushFile(String name) {
         FileWriter fwOb = null;
         PrintWriter pwOb = null;
@@ -163,7 +163,7 @@ public class Config {
             try {
                 if (fwOb != null) fwOb.close();
             } catch (IOException e) {
-                System.out.println("\u001B[31m" +"ERROR: " + e.getMessage());
+                System.out.println("\u001B[31m" + "ERROR: " + e.getMessage());
             }
         }
 
@@ -179,5 +179,41 @@ public class Config {
         if (inputStream2 != null) inputStream2.close();
         if (jsonReader != null) jsonReader.close();
         if (jsonReader2 != null) jsonReader2.close();
+    }
+
+    public ArrayList<Integer> getSelectedItems() {
+        return selectedItems;
+    }
+
+    public void setSelectedItems(ArrayList<Integer> selectedItems) {
+        this.selectedItems = selectedItems;
+    }
+
+    public ArrayList<String> getChannelNames() {
+        return channelNames;
+    }
+
+    public String getHostname() {
+        return hostname;
+    }
+
+    public double getFrequencyStepWidth() {
+        return frequencyStepWidth;
+    }
+
+    public double getVoltageStepWidth() {
+        return voltageStepWidth;
+    }
+
+    public int getStartFrequency() {
+        return startFrequency;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public int getBlockSize() {
+        return blockSize;
     }
 }
