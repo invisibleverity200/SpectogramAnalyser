@@ -5,7 +5,7 @@ import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 
-public class Config {
+public class Config implements Configs {
     private ArrayList<Integer> selectedItems = new ArrayList<>();
     private ArrayList<String> channelNames = new ArrayList<>();
     private String hostname = "192.168.0.1";
@@ -19,6 +19,7 @@ public class Config {
         readConfigFile();
     }
 
+    @Override
     public void writeConfigFile() {
         OutputStream fileWriter = null;
         JsonWriter jsonWriter = null;
@@ -40,6 +41,7 @@ public class Config {
         }
     }
 
+    @Override
     public void writeSelectedChannelsFile() {
         OutputStream fileWriter = null;
         JsonWriter jsonWriter = null;
@@ -111,6 +113,7 @@ public class Config {
         }
     }
 
+    @Override
     public void updateConfig(int startFrequency, double voltageStepWidth, int port, String hostname, double frequencyStepWidth) {
         this.startFrequency = startFrequency;
         this.frequencyStepWidth = frequencyStepWidth;
@@ -181,38 +184,47 @@ public class Config {
         if (jsonReader2 != null) jsonReader2.close();
     }
 
+    @Override
     public ArrayList<Integer> getSelectedItems() {
         return selectedItems;
     }
 
+    @Override
     public void setSelectedItems(ArrayList<Integer> selectedItems) {
         this.selectedItems = selectedItems;
     }
 
+    @Override
     public ArrayList<String> getChannelNames() {
         return channelNames;
     }
 
+    @Override
     public String getHostname() {
         return hostname;
     }
 
+    @Override
     public double getFrequencyStepWidth() {
         return frequencyStepWidth;
     }
 
+    @Override
     public double getVoltageStepWidth() {
         return voltageStepWidth;
     }
 
+    @Override
     public int getStartFrequency() {
         return startFrequency;
     }
 
+    @Override
     public int getPort() {
         return port;
     }
 
+    @Override
     public int getBlockSize() {
         return blockSize;
     }

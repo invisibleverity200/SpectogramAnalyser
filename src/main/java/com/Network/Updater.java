@@ -1,6 +1,7 @@
 package com.Network;
 
 import com.Data.Config;
+import com.Data.Configs;
 import com.UI.BarChart;
 import com.UI.Charts;
 
@@ -10,9 +11,9 @@ import java.io.IOException;
 public class Updater extends Thread {
     private Charts chart;
     private AudioClient client;
-    private Config config;
+    private Configs config;
 
-    public Updater(Charts chart, AudioClient client, Config config) {
+    public Updater(Charts chart, AudioClient client, Configs config) {
         this.chart = chart;
         this.client = client;
         this.config = config;

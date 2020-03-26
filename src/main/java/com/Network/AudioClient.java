@@ -10,7 +10,7 @@ package com.Network;
 
 import com.Data.AudChannel;
 import com.Data.Config;
-import com.UI.BarChart;
+import com.Data.Configs;
 import com.UI.Charts;
 
 import javax.swing.*;
@@ -59,7 +59,7 @@ public class AudioClient {
     }
 
 
-    public void startReceiving(Config config, Charts chart) {
+    void startReceiving(Configs config, Charts chart) {
         try {
             boolean correctNumberOfPackages = true;
             long avgUpdateTime = 0;

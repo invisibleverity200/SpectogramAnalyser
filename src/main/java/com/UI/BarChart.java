@@ -1,6 +1,7 @@
 package com.UI;
 
 import com.Data.Config;
+import com.Data.Configs;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -15,7 +16,7 @@ public class BarChart implements Charts {
 
     public ChartPanel init(XYSeries[] dataSet) {
         for (int i = 0; i < dataSet.length; i++) {
-            if (!(dataSet[i] == null)) { //FIXME possible bug
+            if (!(dataSet[i] == null)) {
                 if (i < this.dataSet.size()) {
                     this.dataSet.set(i, dataSet[i]);
                 } else {
@@ -39,7 +40,7 @@ public class BarChart implements Charts {
         return null;
     }
 
-    public void update(int[][] newData, double frequencySteps, int startFrequency, Config config) {
+    public void update(int[][] newData, double frequencySteps, int startFrequency, Configs config) {
         for (int index = 0; index < newData.length; index++) {
             if ((newData[index] != null) && (index < dataSet.size())) {
                 chart.setNotify(false);

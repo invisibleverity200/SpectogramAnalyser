@@ -1,6 +1,7 @@
 package com.UI;
 
 import com.Data.Config;
+import com.Data.Configs;
 import com.Network.AudioClient;
 import com.Network.Updater;
 import org.jfree.chart.ChartPanel;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 
 public class GUI extends JFrame {
     public GUI() {
-        Config config = new Config();
+        Configs config = new Config();
         Charts barChart = new BarChart();
         AudioClient[] client = {null};
         Thread[] clientThread = {null};
@@ -306,7 +307,7 @@ public class GUI extends JFrame {
 
     }
 
-    private int[] getSelectedChannels(JCheckBoxMenuItem[] channelItems, Config config) {
+    private int[] getSelectedChannels(JCheckBoxMenuItem[] channelItems, Configs config) {
         ArrayList<Integer> listOfSelectedChannels = new ArrayList<>();
         for (int y = 0; y < config.getChannelNames().size(); y++) {
             if (channelItems[y].isSelected()) {
@@ -320,7 +321,7 @@ public class GUI extends JFrame {
         return selectedChannels;
     }
 
-    private void applySettings(JTextField frequencyStepWidth, JTextField startFrequencyField, JTextField VoltageStepWidthField, JTextField ipAndPortField, Config config) {
+    private void applySettings(JTextField frequencyStepWidth, JTextField startFrequencyField, JTextField VoltageStepWidthField, JTextField ipAndPortField, Configs config) {
         try {
             String startFrequency = startFrequencyField.getText();
             double voltageStepWidth = Double.parseDouble(VoltageStepWidthField.getText());

@@ -12,7 +12,7 @@ public class AudChannel {
         this.channelSpectrum = channelSpectrum;
     }
 
-    public XYSeries getXYSeries(Config config) {
+    public XYSeries getXYSeries(Configs config) {
         XYSeries xySeries = new XYSeries(config.getChannelNames().get(channelIndex - 1));
 
         for (int spectrumIndex = 0; spectrumIndex < channelSpectrum.length; spectrumIndex++) {
