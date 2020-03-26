@@ -326,7 +326,7 @@ public class GUI extends JFrame {
             String startFrequency = startFrequencyField.getText();
             double voltageStepWidth = Double.parseDouble(VoltageStepWidthField.getText());
             String[] hostnamePort = ipAndPortField.getText().split(":");
-            //192.168.1.1
+
             if ((hostnamePort.length == 2) && (hostnamePort[0].split("\\.").length == 4)) {
                 config.updateConfig(Integer.parseInt(startFrequency), voltageStepWidth, Integer.parseInt(hostnamePort[1]), hostnamePort[0], Double.parseDouble(frequencyStepWidth.getText()));
             } else {

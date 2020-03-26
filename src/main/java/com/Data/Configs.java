@@ -7,29 +7,29 @@ import java.util.ArrayList;
 
 public interface Configs {
 
-    public void writeConfigFile();
+    void writeConfigFile();
 
-    public void writeSelectedChannelsFile();
-
-
-    public void updateConfig(int startFrequency, double voltageStepWidth, int port, String hostname, double frequencyStepWidth);
+    void writeSelectedChannelsFile();
 
 
-    public ArrayList<Integer> getSelectedItems();
+    void updateConfig(int startFrequency, double voltageStepWidth, int port, String hostname, double frequencyStepWidth);
 
-    public void setSelectedItems(ArrayList<Integer> selectedItems);
 
-    public ArrayList<String> getChannelNames();
+    ArrayList<Integer> getSelectedItems();
 
-    public String getHostname();
+    void setSelectedItems(ArrayList<Integer> selectedItems);
 
-    public double getFrequencyStepWidth();
+    ArrayList<String> getChannelNames();
 
-    public double getVoltageStepWidth();
+    String getHostname();
 
-    public int getStartFrequency();
+    double getFrequencyStepWidth();
 
-    public int getPort();
+    double getVoltageStepWidth();
 
-    public int getBlockSize();
+    int getStartFrequency();
+
+    int getPort();
+
+    int getBlockSize();
 }

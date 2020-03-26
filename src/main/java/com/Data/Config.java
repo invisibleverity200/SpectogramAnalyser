@@ -115,11 +115,56 @@ public class Config implements Configs {
 
     @Override
     public void updateConfig(int startFrequency, double voltageStepWidth, int port, String hostname, double frequencyStepWidth) {
-        this.startFrequency = startFrequency;
-        this.frequencyStepWidth = frequencyStepWidth;
-        this.voltageStepWidth = voltageStepWidth;
-        this.port = port;
+        if (startFrequency >= 0) this.startFrequency = startFrequency;
+        if (frequencyStepWidth >= 0) this.frequencyStepWidth = frequencyStepWidth;
+        if (voltageStepWidth >= 0) this.voltageStepWidth = voltageStepWidth;
+        if (port >= 0) this.port = port;
         this.hostname = hostname;
+    }
+
+    @Override
+    public ArrayList<Integer> getSelectedItems() {
+        return selectedItems;
+    }
+
+    @Override
+    public void setSelectedItems(ArrayList<Integer> selectedItems) {
+        this.selectedItems = selectedItems;
+    }
+
+    @Override
+    public ArrayList<String> getChannelNames() {
+        return channelNames;
+    }
+
+    @Override
+    public String getHostname() {
+        return hostname;
+    }
+
+    @Override
+    public double getFrequencyStepWidth() {
+        return frequencyStepWidth;
+    }
+
+    @Override
+    public double getVoltageStepWidth() {
+        return voltageStepWidth;
+    }
+
+    @Override
+    public int getStartFrequency() {
+        return startFrequency;
+    }
+
+    @Override
+    public int getPort() {
+        return port;
+    }
+
+    @Override
+    public int getBlockSize() {
+        return blockSize;
     }
 
     private JsonObject createJsonObject() {
@@ -182,50 +227,5 @@ public class Config implements Configs {
         if (inputStream2 != null) inputStream2.close();
         if (jsonReader != null) jsonReader.close();
         if (jsonReader2 != null) jsonReader2.close();
-    }
-
-    @Override
-    public ArrayList<Integer> getSelectedItems() {
-        return selectedItems;
-    }
-
-    @Override
-    public void setSelectedItems(ArrayList<Integer> selectedItems) {
-        this.selectedItems = selectedItems;
-    }
-
-    @Override
-    public ArrayList<String> getChannelNames() {
-        return channelNames;
-    }
-
-    @Override
-    public String getHostname() {
-        return hostname;
-    }
-
-    @Override
-    public double getFrequencyStepWidth() {
-        return frequencyStepWidth;
-    }
-
-    @Override
-    public double getVoltageStepWidth() {
-        return voltageStepWidth;
-    }
-
-    @Override
-    public int getStartFrequency() {
-        return startFrequency;
-    }
-
-    @Override
-    public int getPort() {
-        return port;
-    }
-
-    @Override
-    public int getBlockSize() {
-        return blockSize;
     }
 }

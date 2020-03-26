@@ -1,6 +1,5 @@
 package com.UI;
 
-import com.Data.Config;
 import com.Data.Configs;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;

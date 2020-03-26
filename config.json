@@ -1,1 +1,1 @@
-{"StartFrequency":0,"FrequencyStepWidth":"1.0","VoltageStepWidth":"1.0","channelNames":["t"],"Hostname":"192.168.1.108","Port":12345,"BlockSize":99}
+{"StartFrequency":0,"FrequencyStepWidth":"2.0","VoltageStepWidth":"1.0","channelNames":["t"],"Hostname":"192.168.1.108","Port":12345,"BlockSize":99}
