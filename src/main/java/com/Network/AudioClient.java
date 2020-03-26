@@ -11,6 +11,7 @@ package com.Network;
 import com.Data.AudChannel;
 import com.Data.Config;
 import com.UI.BarChart;
+import com.UI.Charts;
 
 import javax.swing.*;
 import java.io.DataInputStream;
@@ -18,7 +19,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class AudioClient implements Client {
+public class AudioClient {
     public JLabel label = null;
     public AudChannel[] channels;
     public int[] selectedChannels;
@@ -31,7 +32,7 @@ public class AudioClient implements Client {
     private String hostname;
     private int port;
 
-    @Override
+
     public boolean connectTo(String hostname, int port) {
         try {
             System.out.println("Hostname: " + hostname);
@@ -48,7 +49,7 @@ public class AudioClient implements Client {
         return true;
     }
 
-    @Override
+
     public void closeConnection() throws IOException, NullPointerException {
         if (!(s.isClosed())) {
             if (s != null) s.close();
@@ -57,8 +58,8 @@ public class AudioClient implements Client {
         }
     }
 
-    @Override
-    public void startReceiving(Config config, BarChart chart) {
+
+    public void startReceiving(Config config, Charts chart) {
         try {
             boolean correctNumberOfPackages = true;
             long avgUpdateTime = 0;

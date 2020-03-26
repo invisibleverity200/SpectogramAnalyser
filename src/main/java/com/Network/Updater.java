@@ -2,16 +2,17 @@ package com.Network;
 
 import com.Data.Config;
 import com.UI.BarChart;
+import com.UI.Charts;
 
 import javax.swing.*;
 import java.io.IOException;
 
 public class Updater extends Thread {
-    private BarChart chart;
+    private Charts chart;
     private AudioClient client;
     private Config config;
 
-    public Updater(BarChart chart, AudioClient client, Config config) {
+    public Updater(Charts chart, AudioClient client, Config config) {
         this.chart = chart;
         this.client = client;
         this.config = config;

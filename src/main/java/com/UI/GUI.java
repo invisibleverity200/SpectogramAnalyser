@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class GUI extends JFrame {
     public GUI() {
         Config config = new Config();
-        BarChart barChart = new BarChart();
+        Charts barChart = new BarChart();
         AudioClient[] client = {null};
         Thread[] clientThread = {null};
 
