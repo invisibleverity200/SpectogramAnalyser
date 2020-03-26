@@ -1,6 +1,7 @@
 package com.Data;
 
 import javax.json.*;
+import javax.json.stream.JsonParsingException;
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -78,7 +79,6 @@ public class Config implements Configs {
             reader1 = Json.createReader(inputStreamSelectedFile);
 
             JsonObject selectedChannels = reader1.readObject();
-
             JsonObject config = reader.readObject();
             JsonArray selectedChannelsArray = selectedChannels.getJsonArray("Selected Items");
 
@@ -102,8 +102,8 @@ public class Config implements Configs {
                 JOptionPane.showMessageDialog(null, "You have similar Channel names please correct that and restart the program", "An Error occurred", JOptionPane.ERROR_MESSAGE);
                 System.exit(1);
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("\u001B[31m" + "ERROR: " + e.getMessage());
+        } catch (FileNotFoundException | JsonParsingException e) {
+            System.out.println("\u001B[31m" + "ERROR while Parsing Json file: " + e.getMessage());
         } finally {
             try {
                 close(inputStream, inputStreamSelectedFile, reader, reader1);
