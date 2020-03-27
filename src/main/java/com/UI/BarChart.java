@@ -4,6 +4,7 @@ import com.Data.Configs;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.data.Range;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -35,7 +36,7 @@ public class BarChart implements Charts {
         if (xySeriesCollection.getSeriesCount() != 0) {
             chart = ChartFactory.createScatterPlot("SpectrumAnalyser", "Frequency in Hz", "Level in V", xySeriesCollection);
             chart.getXYPlot().getRangeAxis().setRange(0, config.getHighestValueOnY());
-            return new ChartPanel(chart);
+            return new MyChartPanel(chart, config);
         }
         return null;
     }
