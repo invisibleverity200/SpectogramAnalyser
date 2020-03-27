@@ -15,6 +15,11 @@ public class Config implements Configs {
     private int startFrequency = 1000;
     private int port = 1337;
     private int blockSize = 512;
+    private int highestValueOnY = 280;
+
+    public int getHighestValueOnY() {
+        return highestValueOnY;
+    }
 
     public Config() {
         readConfigFile();
@@ -92,6 +97,7 @@ public class Config implements Configs {
             this.port = config.getInt("Port");
             this.hostname = config.getString("Hostname");
             this.blockSize = config.getInt("BlockSize");
+            this.highestValueOnY = config.getInt("Highest Y Value");
 
             JsonArray channelNames = config.getJsonArray("channelNames");
 
@@ -102,7 +108,7 @@ public class Config implements Configs {
                 JOptionPane.showMessageDialog(null, "You have similar Channel names please correct that and restart the program", "An Error occurred", JOptionPane.ERROR_MESSAGE);
                 System.exit(1);
             }
-        } catch (FileNotFoundException | JsonParsingException e) {
+        } catch (FileNotFoundException | JsonParsingException | NumberFormatException | NullPointerException e) {
             System.out.println("\u001B[31m" + "ERROR while Parsing Json file: " + e.getMessage());
         } finally {
             try {
@@ -114,11 +120,12 @@ public class Config implements Configs {
     }
 
     @Override
-    public void updateConfig(int startFrequency, double voltageStepWidth, int port, String hostname, double frequencyStepWidth) {
+    public void updateConfig(int startFrequency, double voltageStepWidth, int port, String hostname, double frequencyStepWidth, int highestValueOnY) {
         if (startFrequency >= 0) this.startFrequency = startFrequency;
         if (frequencyStepWidth >= 0) this.frequencyStepWidth = frequencyStepWidth;
         if (voltageStepWidth >= 0) this.voltageStepWidth = voltageStepWidth;
         if (port >= 0) this.port = port;
+        this.highestValueOnY = highestValueOnY;
         this.hostname = hostname;
     }
 
@@ -182,6 +189,7 @@ public class Config implements Configs {
                 .add("Hostname", hostname)
                 .add("Port", port)
                 .add("BlockSize", blockSize)
+                .add("Highest Y Value", highestValueOnY)
                 .build();
     }
 

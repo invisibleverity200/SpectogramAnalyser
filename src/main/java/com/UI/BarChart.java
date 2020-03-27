@@ -13,7 +13,7 @@ public class BarChart implements Charts {
     private ArrayList<XYSeries> dataSet = new ArrayList<>();
     private JFreeChart chart;
 
-    public ChartPanel init(XYSeries[] dataSet) {
+    public ChartPanel init(XYSeries[] dataSet, Configs config) {
         for (int i = 0; i < dataSet.length; i++) {
             if (!(dataSet[i] == null)) {
                 if (i < this.dataSet.size()) {
@@ -34,6 +34,7 @@ public class BarChart implements Charts {
         }
         if (xySeriesCollection.getSeriesCount() != 0) {
             chart = ChartFactory.createScatterPlot("SpectrumAnalyser", "Frequency in Hz", "Level in V", xySeriesCollection);
+            chart.getXYPlot().getRangeAxis().setRange(0, config.getHighestValueOnY());
             return new ChartPanel(chart);
         }
         return null;

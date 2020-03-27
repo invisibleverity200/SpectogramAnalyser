@@ -1,18 +1,17 @@
 package com.Data;
 
-import javax.json.*;
-import javax.swing.*;
-import java.io.*;
 import java.util.ArrayList;
 
 public interface Configs {
 
     void writeConfigFile();
 
+    int getHighestValueOnY();
+
     void writeSelectedChannelsFile();
 
 
-    void updateConfig(int startFrequency, double voltageStepWidth, int port, String hostname, double frequencyStepWidth);
+    void updateConfig(int startFrequency, double voltageStepWidth, int port, String hostname, double frequencyStepWidth, int highestValueOnY);
 
 
     ArrayList<Integer> getSelectedItems();

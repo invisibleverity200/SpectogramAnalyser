@@ -45,19 +45,21 @@ public class GUI extends JFrame {
             JTextField voltageStepWidthField = new JTextField(String.valueOf(config.getVoltageStepWidth()));
             JTextField ipAndPortField = new JTextField(config.getHostname() + ":" + config.getPort());
             JTextField frequencyStepWidthField = new JTextField(String.valueOf(config.getFrequencyStepWidth()));
+            JTextField highestYValueField = new JTextField(String.valueOf(config.getHighestValueOnY()));
 
             JLabel startFrequencyLabel = new JLabel("Start frequency: ");
             JLabel voltageStepWidthLabel = new JLabel("Voltage step width: ");
             JLabel ipAndPortLabel = new JLabel("IP:Port: ");
             JLabel frequencyStepWidthLabel = new JLabel("Frequency step width: ");
+            JLabel highestYValueLabel = new JLabel("Highest Y Value");
 
             JButton applyButton = new JButton("Apply");
             JButton saveButton = new JButton("Save");
 
-            applyButton.addActionListener(e1 -> applySettings(frequencyStepWidthField, startFrequencyField, voltageStepWidthField, ipAndPortField, config));
+            applyButton.addActionListener(e1 -> applySettings(frequencyStepWidthField, startFrequencyField, voltageStepWidthField, ipAndPortField, config, highestYValueField));
 
             saveButton.addActionListener(e12 -> {
-                applySettings(frequencyStepWidthField, startFrequencyField, voltageStepWidthField, ipAndPortField, config);
+                applySettings(frequencyStepWidthField, startFrequencyField, voltageStepWidthField, ipAndPortField, config, highestYValueField);
                 config.writeConfigFile();
             });
 
@@ -84,13 +86,13 @@ public class GUI extends JFrame {
 
             gbc.gridwidth = 3;
             gbc.gridx = 0;
-            gbc.gridy = 4;
+            gbc.gridy = 5;
             gridLayout.setConstraints(applyButton, gbc);
             panel.add(applyButton, gbc);
 
             gbc.gridwidth = 3;
             gbc.gridx = 0;
-            gbc.gridy = 5;
+            gbc.gridy = 6;
             gridLayout.setConstraints(saveButton, gbc);
             panel.add(saveButton, gbc);
 
@@ -105,6 +107,10 @@ public class GUI extends JFrame {
             gbc.gridy = 3;
             gridLayout.setConstraints(frequencyStepWidthField, gbc);
             panel.add(frequencyStepWidthField, gbc);
+            gbc.gridwidth = 2;
+            gbc.gridx = 1;
+            gbc.gridy = 4;
+            panel.add(highestYValueField, gbc);
 
             gbc.gridwidth = 1;
             gbc.gridx = 0;
@@ -129,6 +135,10 @@ public class GUI extends JFrame {
             gbc.gridy = 3;
             gridLayout.setConstraints(frequencyStepWidthLabel, gbc);
             panel.add(frequencyStepWidthLabel, gbc);
+            gbc.gridwidth = 1;
+            gbc.gridx = 0;
+            gbc.gridy = 4;
+            panel.add(highestYValueLabel, gbc);
 
             settingDialog.setContentPane(panel);
             pack();
@@ -181,7 +191,7 @@ public class GUI extends JFrame {
                         initArray[index] = new XYSeries(config.getChannelNames().get(selectedChannels[index]));
                         initArray[index].add(0, 0);
                     }
-                    ChartPanel chartPanel = barChart.init(initArray);
+                    ChartPanel chartPanel = barChart.init(initArray, config);
                     setContentPane(chartPanel);
                     revalidate();
                     repaint();
@@ -250,7 +260,7 @@ public class GUI extends JFrame {
                     }
                     client[0].reload = false;
 
-                    ChartPanel chartPanel = barChart.init(initArray);
+                    ChartPanel chartPanel = barChart.init(initArray, config);
                     if (chartPanel != null) {
                         setContentPane(chartPanel);
                         revalidate();
@@ -321,14 +331,14 @@ public class GUI extends JFrame {
         return selectedChannels;
     }
 
-    private void applySettings(JTextField frequencyStepWidth, JTextField startFrequencyField, JTextField VoltageStepWidthField, JTextField ipAndPortField, Configs config) {
+    private void applySettings(JTextField frequencyStepWidth, JTextField startFrequencyField, JTextField VoltageStepWidthField, JTextField ipAndPortField, Configs config, JTextField highestYValueField) {
         try {
             String startFrequency = startFrequencyField.getText();
             double voltageStepWidth = Double.parseDouble(VoltageStepWidthField.getText());
             String[] hostnamePort = ipAndPortField.getText().split(":");
 
             if ((hostnamePort.length == 2) && (hostnamePort[0].split("\\.").length == 4)) {
-                config.updateConfig(Integer.parseInt(startFrequency), voltageStepWidth, Integer.parseInt(hostnamePort[1]), hostnamePort[0], Double.parseDouble(frequencyStepWidth.getText()));
+                config.updateConfig(Integer.parseInt(startFrequency), voltageStepWidth, Integer.parseInt(hostnamePort[1]), hostnamePort[0], Double.parseDouble(frequencyStepWidth.getText()), Integer.parseInt(highestYValueField.getText()));
             } else {
                 JOptionPane.showMessageDialog(null, "Not allowed Structure", "An Error occurred", JOptionPane.ERROR_MESSAGE);
             }
